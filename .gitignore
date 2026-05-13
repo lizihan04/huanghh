@@ -1,0 +1,26 @@
+# Default ignored files
+/.idea/shelf/
+/workspace.xml
+# Ignored default folder with query files
+/queries/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+# IDEA 配置文件（必须忽略）
+.idea/
+*.iml
+*.iws
+*.ipr
+shelf/
+
+# 编译输出文件（必须忽略）
+out/
+target/
+*.class
+
+# 其他常见临时文件（可选）
+*.log
+.DS_Store
+Thumbs.db
