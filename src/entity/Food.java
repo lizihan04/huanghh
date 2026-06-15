@@ -1,18 +1,18 @@
 package entity;
 
 public class Food extends Item{
-    //食物独有的属性：恢复类型，单词恢复数值
+    //食物独有的属性：恢复类型，单次恢复数值
     private String recoverType;
     private int recoverValue;
 
-
-
+    //构造方法
     public Food(String name, String type, String effect, String imgPath, int count, String recoverType, int recoverValue) {
         super(name, type, effect, imgPath, count);
         this.recoverType = recoverType;
         this.recoverValue = recoverValue;
     }
 
+    //getter和setter方法
     public String getRecoverType() {
         return recoverType;
     }
@@ -29,6 +29,7 @@ public class Food extends Item{
         this.recoverValue = recoverValue;
     }
 
+    //重写使用方法
     @Override
     public void use(Player player) {
         //判断物品数量，小于零则无法使用
