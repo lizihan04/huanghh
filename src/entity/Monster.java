@@ -4,7 +4,6 @@ public abstract class Monster {
     private String name;//名字
     private int hp;//生命
     private int attack;//攻击力
-    private String desc;//介绍
     private String imgPath;//图片路径
 
     /**
@@ -92,14 +91,6 @@ public abstract class Monster {
 
     public void setAttack(int attack) {
         this.attack = attack;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public void setDesc(String desc) {
-        this.desc = desc;
     }
 
     public String getImgPath() {
