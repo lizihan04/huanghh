@@ -21,23 +21,24 @@ public abstract class Monster {
         return this.dropItem;
     }
 
-    // 判断是否死亡，死亡成立，调用die
+    // 判断是否死亡
     public boolean isDead() {
         return this.life <= 0;
     }
 
-    // 返回当前怪物固定掉落物
+    // 返回当前怪物固定掉落物（由子类实现）
     protected abstract Item getFixedDrop();
 
-    // 怪物死亡逻辑：自动使用本类固定掉落，无需外部赋值
+    // 怪物死亡逻辑：掉落固定物品
     public void die(Player player) {
         System.out.println("【" + this.getName() + "】已被击杀！");
-        // 直接获取该类型怪物的固定掉落
         Item template = getFixedDrop();
         if (template != null) {
             Item newItem = copyItem(template);
-            player.addItem(newItem);
-            System.out.println("成功拾取【" + newItem.getName() + "】，已存入背包");
+            if(newItem != null){
+                player.addItem(newItem);
+                System.out.println("成功拾取【" + newItem.getName() + "】，已存入背包");
+            }
         }
     }
 
@@ -58,7 +59,6 @@ public abstract class Monster {
         return null;
     }
 
-    // ========== Getter & Setter ==========
     public String getName() {
         return name;
     }
@@ -72,7 +72,7 @@ public abstract class Monster {
     }
 
     public void setLife(int life) {
-        this.life = life;
+        this.life = Math.max(0, life);
     }
 
     public int getAttack() {

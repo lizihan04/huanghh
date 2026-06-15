@@ -48,7 +48,7 @@ public abstract class Item {
         }
         if (this.count >= num) {
             this.count -= num;
-            System.out.println("使用【" + getName() + "】x" + num + "，剩余数量：" + getCount());
+            System.out.println("使用【" + getName() + "】" + num + "个，剩余数量：" + getCount());
         }
         else {
             this.count = 0;
