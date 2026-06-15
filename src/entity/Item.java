@@ -20,6 +20,10 @@ public abstract class Item {
     public abstract void use(Player player);
 
     public void addCount(int num) {
+        if (num <= 0) {
+            System.out.println("拾取数量不合法！");
+            return;
+        }
         System.out.println("拾取" + getName() + num + "个,当前数量：" + getCount());
         this.count += num;
     }
@@ -37,6 +41,7 @@ public abstract class Item {
         }
     }//丢弃
 
+    //使用
     public void reduceCount2(int num) {
         if (this.count <= 0) {
             System.out.println("【" + getName() + "】数量为0，无法使用");
@@ -44,7 +49,7 @@ public abstract class Item {
         if (this.count >= num) {
             this.count -= num;
             System.out.println("使用【" + getName() + "】x" + num + "，剩余数量：" + getCount());
-        }//使用
+        }
         else {
             this.count = 0;
             System.out.println("数量不足，已用完所有【" + getName() + "】x" + num + "，剩余数量：0");

@@ -44,19 +44,19 @@ public class Food extends Item{
         }
         //判断恢复类型,恢复对应数值
         if ("hunger".equals(recoverType)) {
-            player.setHunger(player.getHunger() + recoverValue);
-            System.out.println("使用" + super.getName() + "，饥饿值恢复" + recoverValue);
-        }else if ("口渴值".equals(recoverType)) {
-            player.setThirst(player.getThirst() + recoverValue);
-        }else if ("疲惫值".equals(recoverType)) {
-            player.setFatigue(player.getFatigue() + recoverValue);
+            // 上限100，防止溢出
+            int newHunger = player.getHunger() + recoverValue;
+            player.setHunger(Math.min(100, newHunger));
+            System.out.println("使用 " + super.getName() + "，饥饿值恢复 " + recoverValue);
+        }else if ("thirst".equals(recoverType)) {
+            int newThirst = player.getThirst() + recoverValue;
+            player.setThirst(Math.min(100, newThirst));
+            System.out.println("使用 " + super.getName() + "，口渴值恢复 " + recoverValue);
+        }else if ("fatigue".equals(recoverType)) {
+            int newFatigue = player.getFatigue() + recoverValue;
+            player.setFatigue(Math.min(100, newFatigue));
+            System.out.println("使用 " + super.getName() + "，疲惫值恢复 " + recoverValue);
         }
         super.reduceCount2(1);
-        this.setCount(this.getCount() - 1);
     }
 }
-
-
-
-
-

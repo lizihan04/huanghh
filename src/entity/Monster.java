@@ -1,61 +1,50 @@
 package entity;
 
 public abstract class Monster {
+    // 类图规定私有属性
     private String name;//名字
-    private int hp;//生命
-    private int attack;//攻击力
+    private int life;//生命
+    private int attack;//攻击
+    private Item dropItem;//掉落物品
     private String imgPath;//图片路径
 
-    /**
-     * 返回当前怪物统一掉落模板
-     * getDropTemplate()：抽象方法，由怪物子类（野猪 / 野兔）实现
-     * 所有野猪 → 统一返回「野猪肉」模板
-     * 所有野兔 → 统一返回「兔肉」模板
-     */
-    protected abstract Item getDropTemplate();
-
-    /**
-     * 怪物攻击方法
-     */
+    // 怪物攻击玩家
     public abstract void attack(Player player);
 
-    /**
-     * 怪物受到伤害，血量最小为0
-     */
-    public void takeDamage(int atk) {
-        this.hp = Math.max(0, this.hp - atk);
+    // 怪物受到伤害
+    public void takeDamage(int damage) {
+        this.life = Math.max(0, this.life - damage);
     }
 
-    /**
-     * 判断怪物是否死亡，如果isDead是真，调用die
-     */
+    // 获取掉落物品
+    public Item drop() {
+        return this.dropItem;
+    }
+
+    // 判断是否死亡，死亡成立，调用die
     public boolean isDead() {
-        return this.hp <= 0;
+        return this.life <= 0;
     }
 
-    /**
-     * 怪物死亡，自动掉落物品进背包
-     */
+    // 返回当前怪物固定掉落物
+    protected abstract Item getFixedDrop();
+
+    // 怪物死亡逻辑：自动使用本类固定掉落，无需外部赋值
     public void die(Player player) {
         System.out.println("【" + this.getName() + "】已被击杀！");
-        Item template = getDropTemplate();
+        // 直接获取该类型怪物的固定掉落
+        Item template = getFixedDrop();
         if (template != null) {
-            /**copyItem(template)：物品复制方法
-             *模板是所有同类型怪物共用的静态对象，如果直接使用，会出现物品数量错乱。
-             *每次击杀怪物，都新建一个独立物品对象作为本次掉落物。
-             */
-            Item dropItem = copyItem(template);
-            player.addItem(dropItem);
-            System.out.println("成功拾取【" + dropItem.getName() + "】，已存入背包");
+            Item newItem = copyItem(template);
+            player.addItem(newItem);
+            System.out.println("成功拾取【" + newItem.getName() + "】，已存入背包");
         }
     }
 
-    /**
-     * 复制物品对象，保证掉落独立
-     */
+    // 复制物品，防止共用对象错乱
     private Item copyItem(Item template) {
         if (template instanceof Food) {
-            Food foodTemplate = (Food) template;//判断对象是不是 Food（食物）类型
+            Food foodTemplate = (Food) template;
             return new Food(
                     foodTemplate.getName(),
                     foodTemplate.getType(),
@@ -66,9 +55,10 @@ public abstract class Monster {
                     foodTemplate.getRecoverValue()
             );
         }
-        return null;//传入的模板不是 Food 类型（比如武器、材料），直接返回 null，不再生成掉落物。
+        return null;
     }
 
+    // ========== Getter & Setter ==========
     public String getName() {
         return name;
     }
@@ -77,12 +67,12 @@ public abstract class Monster {
         this.name = name;
     }
 
-    public int getHp() {
-        return hp;
+    public int getLife() {
+        return life;
     }
 
-    public void setHp(int hp) {
-        this.hp = hp;
+    public void setLife(int life) {
+        this.life = life;
     }
 
     public int getAttack() {
@@ -91,6 +81,10 @@ public abstract class Monster {
 
     public void setAttack(int attack) {
         this.attack = attack;
+    }
+
+    public void setDropItem(Item dropItem) {
+        this.dropItem = dropItem;
     }
 
     public String getImgPath() {
