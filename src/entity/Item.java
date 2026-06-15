@@ -16,7 +16,8 @@ public abstract class Item {
         return "weapon".equals(this.type);
     }
 
-    public abstract void use(Player player);//玩家使用
+    //玩家使用
+    public abstract void use(Player player);
 
     public void addCount(int num) {
         System.out.println("拾取" + getName() + num + "个,当前数量：" + getCount());
