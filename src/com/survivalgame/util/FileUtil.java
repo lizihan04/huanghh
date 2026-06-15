@@ -1,4 +1,4 @@
-package util;
+package com.survivalgame.util;
 
 import entity.Player;
 import java.io.*;
