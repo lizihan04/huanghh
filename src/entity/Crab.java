@@ -12,7 +12,7 @@ public class Crab extends Monster{
     @Override
     public void attack(Player player) {
         int atk = getAttack();
-        player.takeDamage(atk);
+        player.setHp(player.getHp() - atk);
         System.out.println("螃蟹挥舞钳子攻击，对你造成 " + atk + " 点伤害！");
     }
 

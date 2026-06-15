@@ -66,5 +66,7 @@ public class Tool extends Item{
             if (this.getCount() > 0) {
                 this.setCount(this.getCount() - 1);
             }
+        }
     }
+
 }

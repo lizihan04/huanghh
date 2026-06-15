@@ -12,7 +12,7 @@ public class TigerShark extends Monster {
     @Override
     public void attack(Player player) {
         int atk = getAttack();
-        player.takeDamage(atk);
+        player.setHp(player.getHp() - atk);
         System.out.println("虎鲨咬了你一口，对你造成 " + atk + " 点伤害！");
     }
 
