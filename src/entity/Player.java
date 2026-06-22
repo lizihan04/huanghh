@@ -30,6 +30,9 @@ public class Player {
     private List<Item> backpack;// 背包
     private int lighthouseProgress; // 灯塔建造进度 0~100
 
+    private MapTile[][] gameMap;      // 地图引用（用于存档）
+    private Tool equippedWeapon;      // 当前装备的武器
+
     // 游戏状态
     private boolean isGameOver;
     private boolean isGameWin;
@@ -148,6 +151,39 @@ public class Player {
         backpack.add(item);
     }
 
+    /**
+     * 玩家攻击怪物
+     */
+    public void attack(Monster monster) {
+        int damage = this.baseAttack;
+        if (equippedWeapon != null && equippedWeapon.getDurability() > 0) {
+            damage += equippedWeapon.getAttackBonus();
+            equippedWeapon.setDurability(equippedWeapon.getDurability() - 1);
+            if (equippedWeapon.getDurability() <= 0) {
+                System.out.println("武器【" + equippedWeapon.getName() + "】已损坏！");
+                equippedWeapon = null;
+            }
+        }
+        monster.takeDamage(damage);
+        System.out.println("你对 " + monster.getName() + " 造成 " + damage + " 点伤害");
+    }
+
+    public void setGameMap(MapTile[][] map) {
+        this.gameMap = map;
+    }
+
+    public MapTile[][] getGameMap() {
+        return this.gameMap;
+    }
+
+    public void equipWeapon(Tool weapon) {
+        this.equippedWeapon = weapon;
+    }
+
+    public Tool getEquippedWeapon() {
+        return equippedWeapon;
+    }
+    
     public int getHp() {
         return hp;
     }
@@ -208,5 +244,22 @@ public class Player {
     }
     public int getLighthouseProgress() {
         return lighthouseProgress;
+    }
+
+    public void setActionPoint(int actionPoint) {
+        this.actionPoint = Math.max(0, actionPoint);
+    }
+
+    public void setDay(int day) {
+        this.day = Math.max(1, day);
+    }
+
+    public void setLighthouseProgress(int lighthouseProgress) {
+        this.lighthouseProgress = Math.max(0, Math.min(100, lighthouseProgress));
+        checkGameOver();
+    }
+
+    public void setDefense(int defense) {
+        this.defense = Math.max(0, defense);
     }
 }
