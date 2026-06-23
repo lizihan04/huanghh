@@ -7,11 +7,11 @@ public class Monkey extends Monster {
     // 设定偷窃失手概率：30% 几率偷东西失败
     private static final int STEAL_FAIL_RATE = 3;
 
-    public Monkey(String name, int life, int attack, String imgPath) {
-        super.setName(name);
-        super.setLife(life);
-        super.setAttack(attack);
-        super.setImgPath(imgPath);
+    public Monkey() {
+        super.setName("猴子");
+        super.setLife(100);
+        super.setAttack(20);
+        super.setImgPath("img/monkey.png");
     }
 
     @Override
@@ -24,7 +24,7 @@ public class Monkey extends Monster {
         if (stealState != 1) {
             int atk = this.getAttack();
             System.out.println("猴子发怒，给了你一个大比兜！");
-            player.takeDamage(atk);
+            player.setHp(player.getHp() - atk);
             System.out.println("你受到 " + atk + " 点伤害！");
         }
     }

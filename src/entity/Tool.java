@@ -42,7 +42,6 @@ public class Tool extends Item{
     //重写使用方法
     @Override
     public void use(Player player) {
-        //检验工具是否可用（数量，耐久度）
         if (this.getCount() <= 0) {
             System.out.println(this.getName() + "数量不足，无法使用！");
             return;
@@ -52,20 +51,15 @@ public class Tool extends Item{
             return;
         }
 
-        //工具生效
         System.out.println("使用【" + this.getName() + "】，攻击+" + this.attackBonus + "，采集加成+" + this.collectBonus);
 
-        //消耗耐久度
         this.durability--;
-        super.reduceCount2(1);
-
-        //如果工具的耐久度耗尽，则工具数量-1
+        
         if (this.durability == 0) {
             System.out.println(this.getName() + "耐久耗尽，道具损毁！");
-            //当工具数量大于0时数量-1
-            if (this.getCount() > 0) {
-                this.setCount(this.getCount() - 1);
-            }
+            super.reduceCount2(1);
+        } else {
+            System.out.println("剩余耐久度：" + this.durability);
         }
     }
 
