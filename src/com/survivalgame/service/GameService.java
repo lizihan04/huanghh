@@ -19,7 +19,7 @@ public class GameService {
     }
 
     private Player player;                 // 玩家单例引用
-    private MapTile[][] map;               // 网格地图 (30x30)
+    private MapTile[][] map;               // 网格地图 (45*45)
     private int mapSize = 45;              // 固定45
     private Random random;                 // 随机数生成器
     private Map<String, Map<String, Integer>> recipes;  // 合成配方
