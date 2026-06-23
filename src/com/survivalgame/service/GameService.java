@@ -1,7 +1,7 @@
 package com.survivalgame.service;
 
 import entity.*;
-import com.survivalgame.util.FileUtil;   // 修正导入路径
+import com.survivalgame.util.FileUtil;
 
 import java.util.*;
 
@@ -20,7 +20,7 @@ public class GameService {
 
     private Player player;                 // 玩家单例引用
     private MapTile[][] map;               // 网格地图 (30x30)
-    private int mapSize = 30;              // 固定30
+    private int mapSize = 45;              // 固定45
     private Random random;                 // 随机数生成器
     private Map<String, Map<String, Integer>> recipes;  // 合成配方
 
@@ -33,7 +33,7 @@ public class GameService {
         refreshMapResourcesAndMonsters();
         initRecipes();
         // 设置玩家起始区域为地图中心格子的场景
-        int center = mapSize / 2;
+        int center = (mapSize - 1)/ 2;
         player.setCurrentArea(map[center][center].getSceneType());
         System.out.println("游戏初始化完成，欢迎来到荒岛！");
     }
@@ -42,31 +42,28 @@ public class GameService {
     private void generateMap() {
         map = new MapTile[mapSize][mapSize];
         double center = (mapSize - 1) / 2.0;
+
         for (int i = 0; i < mapSize; i++) {
             for (int j = 0; j < mapSize; j++) {
-                double dist = Math.hypot(i - center, j - center);
-                double noise = (random.nextDouble() - 0.5) * 4.0;
-                double adjustedDist = dist + noise;
+                double dist = Math.sqrt(Math.pow(i - center, 2) + Math.pow(j - center, 2));
 
                 String sceneType;
-                if (adjustedDist < 7) {
+                if (dist < 8) {
                     sceneType = "树林";
-                } else if (adjustedDist < 14) {
+                } else if (dist < 19) {
                     sceneType = "沙滩";
-                } else if (adjustedDist < 21) {
+                } else if (dist < 35) {
                     sceneType = "岩石区";
                 } else {
                     sceneType = "海边";
                 }
-                if (dist < 3) sceneType = "树林";
-                if (dist > 19) sceneType = "海边";
 
                 String imgPath = "img/tile_" + sceneType + ".png";
                 MapTile tile = new MapTile(i, j, sceneType, imgPath);
                 map[i][j] = tile;
             }
         }
-        player.setGameMap(map);  // 需要 Player 中有 setGameMap 方法
+        player.setGameMap(map);
     }
 
     // ---------- 刷新所有格子的资源与怪物 ----------
@@ -94,12 +91,12 @@ public class GameService {
                 return new Tool("藤蔓", "material", "合成材料", "img/vine.png", 1 + random.nextInt(3), 0, 0, 0);
             case "沙滩":
                 if (random.nextBoolean()) {
-                    return new Tool("树枝", "material", "基础材料", "img/stick.png", 1 + random.nextInt(2), 0, 0, 0);
+                    return new Tool("树枝", "material", "合成材料", "img/stick.png", 1 + random.nextInt(2), 0, 0, 0);
                 } else {
                     return new Food("椰子", "food", "解渴", "img/coconut.png", 1, "thirst", 20);
                 }
             case "岩石区":
-                return new Tool("石头", "material", "基础材料", "img/stone.png", 1 + random.nextInt(3), 0, 0, 0);
+                return new Tool("石头", "material", "合成材料", "img/stone.png", 1 + random.nextInt(3), 0, 0, 0);
             case "海边":
                 return new Tool("贝壳", "material", "合成材料", "img/shell.png", 1 + random.nextInt(3), 0, 0, 0);
             default:
@@ -110,8 +107,7 @@ public class GameService {
     private Monster createMonsterByScene(String scene) {
         switch (scene) {
             case "树林":
-                // 临时使用 Crab，正式应创建 Monkey 类
-                return new Crab();   // TODO: 创建 Monkey 类替换
+                return new Monkey();
             case "沙滩":
                 // 临时使用 Crab，正式应创建 WildBoar 和 Rabbit
                 return new Crab();
@@ -127,22 +123,30 @@ public class GameService {
     // ---------- 合成配方 ----------
     private void initRecipes() {
         recipes = new HashMap<>();
-        recipes.put("木棒", new HashMap<String, Integer>() {{
-            put("树枝", 3);
-            put("藤蔓", 2);
-        }});
-        recipes.put("贝刃", new HashMap<String, Integer>() {{
-            put("贝壳", 3);
-            put("藤蔓", 2);
-        }});
-        recipes.put("石剑", new HashMap<String, Integer>() {{
-            put("石头", 3);
-            put("藤蔓", 2);
-        }});
-        recipes.put("铁剑", new HashMap<String, Integer>() {{
-            put("矿石", 3);
-            put("藤蔓", 2);
-        }});
+
+        // 木棒：3树枝 + 2藤蔓
+        HashMap<String, Integer> woodClub = new HashMap<>();
+        woodClub.put("树枝", 3);
+        woodClub.put("藤蔓", 2);
+        recipes.put("木棒", woodClub);
+
+        // 贝刃：3贝壳 + 2藤蔓
+        HashMap<String, Integer> shellBlade = new HashMap<>();
+        shellBlade.put("贝壳", 3);
+        shellBlade.put("藤蔓", 2);
+        recipes.put("贝刃", shellBlade);
+
+        // 石剑：3石头 + 2藤蔓
+        HashMap<String, Integer> stoneSword = new HashMap<>();
+        stoneSword.put("石头", 3);
+        stoneSword.put("藤蔓", 2);
+        recipes.put("石剑", stoneSword);
+
+        // 铁剑：3矿石 + 2藤蔓（矿石来自海边）
+        HashMap<String, Integer> ironSword = new HashMap<>();
+        ironSword.put("矿石", 3);
+        ironSword.put("藤蔓", 2);
+        recipes.put("铁剑", ironSword);
     }
 
     // ---------- 探索格子 ----------
@@ -395,8 +399,10 @@ public class GameService {
             Tool t = (Tool) src;
             return new Tool(t.getName(), t.getType(), t.getEffect(), t.getImgPath(),
                     t.getCount(), t.getAttackBonus(), t.getCollectBonus(), t.getDurability());
+        } else {
+            // 如果传入其他类型，返回 null
+            return null;
         }
-        return null;
     }
 
     // ---------- Getter ----------
