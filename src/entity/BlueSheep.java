@@ -10,9 +10,17 @@ public class BlueSheep extends Monster{
 
         @Override
         public void attack(Player player) {
-            int atk = getAttack();
-            player.takeDamage(atk);
-            System.out.println("岩羊用角狠狠顶了你一下，对你造成 " + atk + " 点伤害！");
+            int atk1 = getAttack();
+            int atk2 = 20;
+            int randomNum =(int)(Math.random()*2);
+            if(randomNum==0){
+                player.setHp(player.getHp() - atk1);
+                System.out.println("岩羊用角狠狠顶了你一下，对你造成 " + atk1 + " 点伤害！");
+            }else if(randomNum==1){
+                player.setHp(player.getHp() - atk2);
+                System.out.println("岩羊用脚狠狠踢了你一下，对你造成 " + atk2 + " 点伤害！");
+            }
+
         }
 
         @Override

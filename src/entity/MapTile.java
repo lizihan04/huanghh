@@ -108,7 +108,7 @@ public class MapTile {
         public Monster encounterMonster() {
             // 检验：存在标记且怪物对象不为空，才可以遭遇
             if (this.hasMonster && this.monster != null) {
-                return temp2;
+                return this.monster;
             }
             return null;
         }
@@ -123,49 +123,74 @@ public class MapTile {
         }
 
         //格子状态刷新预留方法（看着选用吧，不一定要写在这里）
-    public void refresh() {
+//    public void refresh() {
 //        Random random = new Random();
-//        // 刷新概率：50%概率刷新怪物
-//        double monsterRate = 0.5;
-//        // 40%概率刷新资源
-//        double resourceRate = 0.4;
 //
-//        // 先清空原有怪物、资源（每日刷新先重置）
+//        double monsterRate = 0.4;
+//        double resourceRate = 0.5;
+//
 //        this.setMonster(null);
 //        this.setResource(null);
 //
-//        // 按地形刷新怪物
 //        if (random.nextDouble() < monsterRate) {
-//            String type = this.getSceneType();
-//            Monster newMonster = null;
-//            // 不同地形生成对应怪物
-//            if ("树林".equals(type)) {
-//                newMonster = new Hare("野兔", 30, 8, null, "img/hare.png");
-//            } else if ("岩石区".equals(type)) {
-//                newMonster = new Boar("血玉蜘蛛", 50, 12, null, "img/boar.png");
-//            } else if ("海边".equals(type)) {
-//                newMonster = new Snake("毒蛇", 45, 15, null, "img/snake.png");
-//            } else if ("沙滩".equals(type)) {
-//                newMonster = new Snake("螃蟹", 70, 20, null, "img/guard_snake.png");
-//            }
-//            // 沙滩默认不刷怪，newMonster 为 null 则不赋值
+//            Monster newMonster = createMonsterByScene(sceneType, random);
 //            this.setMonster(newMonster);
 //        }
 //
-//        // 按地形刷新资源（食物/材料）
 //        if (random.nextDouble() < resourceRate) {
-//            String type = this.getSceneType();
-//            Item newResource = null;
-//            if ("树林".equals(type)) {
-//                newResource = new Food("野果", "食物", "恢复饥饿", "img/fruit.png", 2, "饥饿值", 20);
-//            } else if ("岩石区".equals(type)) {
-//                newResource = new Tool("矿石", "材料", "基础打造材料", "img/ore.png", 1, 0, 2, 0);
-//            } else if ("海边".equals(type)) {
-//                newResource = new Food("鲜鱼", "食物", "恢复饥饿", "img/fish.png", 1, "饥饿值", 30);
-//            } else if ("沙滩".equals(type)) {
-//                newResource = new Tool("椰子", "食物", "解渴", "img/.png", 1, 0, 0, 0);
-//            }
+//            Item newResource = createResourceByScene(sceneType, random);
 //            this.setResource(newResource);
 //        }
-    }
+//    }
+//
+//    private Monster createMonsterByScene(String sceneType, Random random) {
+//        switch (sceneType) {
+//            case "沙滩":
+//                return random.nextBoolean() ? new Crab() : null;
+//            case "树林":
+//                int rand = random.nextInt(3);
+//                if (rand == 0) return new Monkey();
+//                else if (rand == 1) return new BlueSheep();
+//                else return null;
+//            case "岩石区":
+//                return random.nextBoolean() ? new BlueSheep() : null;
+//            case "海边":
+//                return random.nextBoolean() ? new TigerShark() : null;
+//            default:
+//                return null;
+//        }
+//    }
+//
+//    private Item createResourceByScene(String sceneType, Random random) {
+//        switch (sceneType) {
+//            case "沙滩":
+//                int r1 = random.nextInt(3);
+//                if (r1 == 0) return new Food("椰子", "食物", "解渴", "img/coconut.png", 1, "thirst", 15);
+//                else if (r1 == 1) return new Food("贝壳", "食物", "恢复饥饿", "img/shell.png", 1, "hunger", 10);
+//                else return new Tool("藤蔓", "材料", "基础材料", "img/vine.png", 1, 0, 0, 0);
+//
+//            case "树林":
+//                int r2 = random.nextInt(4);
+//                if (r2 == 0) return new Food("野果", "食物", "恢复饥饿", "img/fruit.png", 1, "hunger", 20);
+//                else if (r2 == 1) return new Tool("木材", "材料", "基础材料", "img/wood.png", 1, 0, 0, 0);
+//                else if (r2 == 2) return new Tool("树枝", "材料", "基础材料", "img/stick.png", 1, 0, 0, 0);
+//                else return null;
+//
+//            case "岩石区":
+//                int r3 = random.nextInt(3);
+//                if (r3 == 0) return new Tool("矿石", "材料", "基础材料", "img/ore.png", 1, 0, 0, 0);
+//                else if (r3 == 1) return new Tool("石头", "材料", "基础材料", "img/stone.png", 1, 0, 0, 0);
+//                else return null;
+//
+//            case "海边":
+//                int r4 = random.nextInt(3);
+//                if (r4 == 0) return new Food("鲜鱼", "食物", "恢复饥饿", "img/fish.png", 1, "hunger", 30);
+//                else if (r4 == 1) return new Food("海藻", "食物", "恢复口渴", "img/seaweed.png", 1, "thirst", 20);
+//                else return null;
+//
+//            default:
+//                return null;
+//        }
+//    }
+
 }
