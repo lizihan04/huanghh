@@ -8,6 +8,7 @@ import java.util.*;
 /**
  * 游戏核心业务逻辑服务类（单例）
  * 负责：地图生成、每日刷新、探索事件、战斗系统、合成系统、天数管理、存档读档
+ * 新增功能：玩家主动切换区域 switchArea()
  * 已适配Player最新代码：攻击调用attackMonster、灯塔进度+碎片双同步、全套setter、地图存取方法
  */
 public class GameService {
@@ -37,6 +38,48 @@ public class GameService {
         int center = (mapSize - 1)/ 2;
         player.setCurrentArea(map[center][center].getSceneType());
         System.out.println("游戏初始化完成，欢迎来到荒岛！");
+    }
+
+    // ===================== 新增：玩家主动切换区域 =====================
+    /**
+     * 玩家手动切换指定场景区域
+     * @param targetArea 可选：沙滩 / 树林 / 岩石区 / 海边
+     * 消耗1行动力，疲惫值+3，切换后30%概率遭遇本区域怪物
+     */
+    public void switchArea(String targetArea) {
+        // 校验合法区域
+        List<String> areaList = Arrays.asList("沙滩", "树林", "岩石区", "海边");
+        if (!areaList.contains(targetArea)) {
+            System.out.println("切换失败：区域名称无效！可选：沙滩、树林、岩石区、海边");
+            return;
+        }
+        if (player.isGameOver() || player.isGameWin()) {
+            System.out.println("游戏已结束，无法切换区域！");
+            return;
+        }
+        if (player.getActionPoint() <= 0) {
+            System.out.println("行动力不足，无法前往新区域！");
+            return;
+        }
+        if (player.getCurrentArea().equals(targetArea)) {
+            System.out.println("你当前已经在【" + targetArea + "】，无需重复切换");
+            return;
+        }
+
+        // 消耗行动力、增加疲惫
+        player.doAction(null);
+        // 更新玩家当前场景标识
+        player.setCurrentArea(targetArea);
+        System.out.println("成功移动至：" + targetArea);
+
+        // 30%概率刷新区域怪物，触发战斗
+        if (random.nextDouble() < 0.3) {
+            Monster monster = createMonsterByScene(targetArea);
+            if (monster != null) {
+                System.out.println("抵达" + targetArea + "，遭遇怪物：" + monster.getName() + "！");
+                startBattle(monster, null);
+            }
+        }
     }
 
     // ---------- 地图生成（45*45，边界模糊，陆地面积大） ----------
@@ -110,7 +153,7 @@ public class GameService {
             case "树林":
                 return new Monkey();
             case "沙滩":
-                return new Crab();
+                return random.nextBoolean() ? new Monkey() : new Crab();
             case "岩石区":
                 return new BlueSheep();
             case "海边":
@@ -198,11 +241,10 @@ public class GameService {
     // ---------- 回合制战斗（已修复player.attack()报错，改为attackMonster） ----------
     private void startBattle(Monster monster, MapTile tile) {
         while (!monster.isDead() && player.getHp() > 0) {
-            // 修复前：player.attack(monster);
             boolean killSuccess = player.attackMonster(monster);
             if (killSuccess) {
                 monster.die(player);
-                tile.setMonster(null);
+                if (tile != null) tile.setMonster(null);
                 System.out.println("战斗胜利！");
                 break;
             }
