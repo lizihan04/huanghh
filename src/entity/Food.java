@@ -1,6 +1,6 @@
 package entity;
 
-public class Food extends Item{
+public class Food extends Item implements java.io.Serializable {
     //食物独有的属性：恢复类型，单次恢复数值
     private String recoverType;
     private int recoverValue;
