@@ -8,6 +8,7 @@ public class Crab extends Monster{
         setImgPath("img/crab.png");
     }
 
+
     //重写攻击方法
     @Override
     public void attack(Player player) {
