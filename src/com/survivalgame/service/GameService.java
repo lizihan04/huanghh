@@ -8,6 +8,7 @@ import java.util.*;
 /**
  * 游戏核心业务逻辑服务类（单例）
  * 负责：地图生成、每日刷新、探索事件、战斗系统、合成系统、天数管理、存档读档
+ * 已适配Player最新代码：攻击调用attackMonster、灯塔进度+碎片双同步、全套setter、地图存取方法
  */
 public class GameService {
 
@@ -19,8 +20,8 @@ public class GameService {
     }
 
     private Player player;                 // 玩家单例引用
-    private MapTile[][] map;               // 网格地图 (30x30)
-    private int mapSize = 45;              // 固定45
+    private MapTile[][] map;               // 网格地图 (45*45)
+    private final int mapSize = 45;              // 固定45
     private Random random;                 // 随机数生成器
     private Map<String, Map<String, Integer>> recipes;  // 合成配方
 
@@ -38,7 +39,7 @@ public class GameService {
         System.out.println("游戏初始化完成，欢迎来到荒岛！");
     }
 
-    // ---------- 地图生成（30x30，边界模糊，陆地面积大） ----------
+    // ---------- 地图生成（45*45，边界模糊，陆地面积大） ----------
     private void generateMap() {
         map = new MapTile[mapSize][mapSize];
         double center = (mapSize - 1) / 2.0;
@@ -109,7 +110,6 @@ public class GameService {
             case "树林":
                 return new Monkey();
             case "沙滩":
-                // 临时使用 Crab，正式应创建 WildBoar 和 Rabbit
                 return new Crab();
             case "岩石区":
                 return new BlueSheep();
@@ -178,7 +178,7 @@ public class GameService {
                 System.out.println("这里没有物资");
             }
         } else if (r < 0.8) {
-            Monster monster = tile.encounterMonster();  // 需要修正 MapTile 中的 bug
+            Monster monster = tile.encounterMonster();
             if (monster != null) {
                 System.out.println("遭遇 " + monster.getName() + "！");
                 startBattle(monster, tile);
@@ -195,11 +195,12 @@ public class GameService {
         player.checkGameOver();
     }
 
-    // ---------- 回合制战斗 ----------
+    // ---------- 回合制战斗（已修复player.attack()报错，改为attackMonster） ----------
     private void startBattle(Monster monster, MapTile tile) {
         while (!monster.isDead() && player.getHp() > 0) {
-            player.attack(monster);   // 需要 Player 中有 attack 方法
-            if (monster.isDead()) {
+            // 修复前：player.attack(monster);
+            boolean killSuccess = player.attackMonster(monster);
+            if (killSuccess) {
                 monster.die(player);
                 tile.setMonster(null);
                 System.out.println("战斗胜利！");
@@ -242,7 +243,7 @@ public class GameService {
         System.out.println("进入第 " + player.getDay() + " 天，行动点重置为10");
     }
 
-    // ---------- 建造灯塔 ----------
+    // ---------- 建造灯塔（兼容Player双同步进度+碎片） ----------
     public void buildLighthouse() {
         if (player.isGameOver() || player.isGameWin()) {
             System.out.println("游戏已结束");
@@ -268,7 +269,7 @@ public class GameService {
         List<Item> backpack = player.getBackpack();
         Map<String, Integer> own = new HashMap<>();
         for (Item item : backpack) {
-            if (item.isMaterial()) {
+            if (item.getType().equals("material")) {
                 own.put(item.getName(), own.getOrDefault(item.getName(), 0) + item.getCount());
             }
         }
@@ -303,7 +304,7 @@ public class GameService {
         Iterator<Item> it = backpack.iterator();
         while (it.hasNext() && count > 0) {
             Item item = it.next();
-            if (item.getName().equals(materialName) && item.isMaterial()) {
+            if (item.getName().equals(materialName) && item.getType().equals("material")) {
                 int have = item.getCount();
                 if (have <= count) {
                     count -= have;
@@ -359,7 +360,7 @@ public class GameService {
         if (loaded == null) return false;
         copyPlayerData(loaded);
         this.map = player.getGameMap();
-        if (this.map == null || this.map.length != 30) {
+        if (this.map == null || this.map.length != mapSize) {
             System.err.println("存档地图数据异常");
             return false;
         }
@@ -400,7 +401,6 @@ public class GameService {
             return new Tool(t.getName(), t.getType(), t.getEffect(), t.getImgPath(),
                     t.getCount(), t.getAttackBonus(), t.getCollectBonus(), t.getDurability());
         } else {
-            // 如果传入其他类型，返回 null
             return null;
         }
     }
