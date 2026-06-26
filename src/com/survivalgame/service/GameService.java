@@ -311,7 +311,7 @@ public class GameService {
             case "贝刃":
                 return new Tool("贝刃", "weapon", "用来开椰子", "img/shell_blade.png", 1, 15, 0, 15);
             case "石刃":
-                return new Tool("石刃", "weapon", "锋利石刃", "img/stone_blade.png", 1, 12, 0, 20);
+                return new Tool("石斧", "weapon", "锋利石刃", "img/stone_blade.png", 1, 12, 0, 20);
             case "木棒":
                 return new Tool("木棒", "weapon", "近战武器", "img/w_club.png", 1, 10, 0, 30);
             case "锤子":

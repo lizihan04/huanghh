@@ -23,7 +23,7 @@ public class RecipeManagement {
         Map<String, Integer> stoneBlade = new HashMap<>();
         stoneBlade.put("石头", 2);
         stoneBlade.put("藤蔓", 3);
-        RECIPES.put("石刃", stoneBlade);
+        RECIPES.put("石斧", stoneBlade);
 
         // 木棒：3树枝 + 2藤蔓
         Map<String, Integer> woodClub = new HashMap<>();
