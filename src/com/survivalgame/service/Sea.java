@@ -21,7 +21,7 @@ public class Sea implements Terrain {
     @Override
     public Item createResource() {
         int count = 1 + random.nextInt(2);
-        return new Tool("矿石", "material", "合成材料", "img/ore.png", count, 0, 0, 0);
+        return new Tool("矿石", "material", "合成材料", "images/img_item/material/item_shell.png", count, 0, 0, 0);
     }
 
     @Override

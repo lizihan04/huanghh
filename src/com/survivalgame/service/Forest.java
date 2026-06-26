@@ -21,7 +21,7 @@ public class Forest implements Terrain {
     @Override
     public Item createResource() {
         int count = 1 + random.nextInt(3);
-        return new Tool("藤蔓", "material", "合成材料", "img/vine.png", count, 0, 0, 0);
+        return new Tool("藤蔓", "material", "合成材料", "images/img_item/material/item_vine.png", count, 0, 0, 0);
     }
 
     @Override
