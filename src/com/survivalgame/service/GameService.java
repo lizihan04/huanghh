@@ -8,8 +8,6 @@ import java.util.*;
 /**
  * 游戏核心业务逻辑服务类（单例）
  * 负责：地图生成、每日刷新、探索事件、战斗系统、合成系统、天数管理、存档读档
- * 新增功能：玩家主动切换区域 switchArea()
- * 已适配Player最新代码：攻击调用attackMonster、灯塔进度+碎片双同步、全套setter、地图存取方法
  */
 public class GameService {
 
@@ -20,34 +18,45 @@ public class GameService {
         return instance;
     }
 
-    private Player player;                 // 玩家单例引用
-    private MapTile[][] map;               // 网格地图 (45*45)
-    private final int mapSize = 45;              // 固定45
-    private Random random;                 // 随机数生成器
-    private Map<String, Map<String, Integer>> recipes;  // 合成配方
+    private Player player;
+    private MapTile[][] map;
+    private final int mapSize = 45;
+    private Random random;
+    private Map<String, Terrain> terrains;  // ← 新增：地形映射
 
     // ---------- 初始化 ----------
     public void initGame() {
         this.player = Player.getInstance();
         this.player.initPlayer();
         this.random = new Random();
+        initTerrains();                    // ← 新增：初始化地形
         generateMap();
         refreshMapResourcesAndMonsters();
-        initRecipes();
-        // 设置玩家起始区域为地图中心格子的场景
-        int center = (mapSize - 1)/ 2;
+        int center = (mapSize - 1) / 2;
         player.setCurrentArea(map[center][center].getSceneType());
         System.out.println("游戏初始化完成，欢迎来到荒岛！");
     }
 
-    // ===================== 新增：玩家主动切换区域 =====================
-    /**
-     * 玩家手动切换指定场景区域
-     * @param targetArea 可选：沙滩 / 树林 / 岩石区 / 海边
-     * 消耗1行动力，疲惫值+3，切换后30%概率遭遇本区域怪物
-     */
+    // ---------- 地形服务 ----------
+    private void initTerrains() {
+        terrains = new HashMap<>();
+        terrains.put("树林", Forest.getInstance());
+        terrains.put("沙滩", Beach.getInstance());
+        terrains.put("岩石区", Rocky.getInstance());
+        terrains.put("海边", Sea.getInstance());
+    }
+
+    private Terrain getTerrain(String sceneType) {
+        Terrain terrain = terrains.get(sceneType);
+        if (terrain == null) {
+            System.err.println("警告：未知地形 '" + sceneType + "'，使用沙滩作为默认");
+            return terrains.get("沙滩");
+        }
+        return terrain;
+    }
+
+    // ===================== 玩家主动切换区域 =====================
     public void switchArea(String targetArea) {
-        // 校验合法区域
         List<String> areaList = Arrays.asList("沙滩", "树林", "岩石区", "海边");
         if (!areaList.contains(targetArea)) {
             System.out.println("切换失败：区域名称无效！可选：沙滩、树林、岩石区、海边");
@@ -66,15 +75,12 @@ public class GameService {
             return;
         }
 
-        // 消耗行动力、增加疲惫
         player.doAction(null);
-        // 更新玩家当前场景标识
         player.setCurrentArea(targetArea);
         System.out.println("成功移动至：" + targetArea);
 
-        // 30%概率刷新区域怪物，触发战斗
         if (random.nextDouble() < 0.3) {
-            Monster monster = createMonsterByScene(targetArea);
+            Monster monster = getTerrain(targetArea).createMonster();
             if (monster != null) {
                 System.out.println("抵达" + targetArea + "，遭遇怪物：" + monster.getName() + "！");
                 startBattle(monster, null);
@@ -82,7 +88,7 @@ public class GameService {
         }
     }
 
-    // ---------- 地图生成（45*45，边界模糊，陆地面积大） ----------
+    // ---------- 地图生成 ----------
     private void generateMap() {
         map = new MapTile[mapSize][mapSize];
         double center = (mapSize - 1) / 2.0;
@@ -118,78 +124,15 @@ public class GameService {
                 tile.setMonster(null);
 
                 if (random.nextDouble() < 0.4) {
-                    Item newResource = createResourceByScene(tile.getSceneType());
+                    Item newResource = getTerrain(tile.getSceneType()).createResource();
                     tile.setResource(newResource);
                 }
                 if (random.nextDouble() < 0.4) {
-                    Monster newMonster = createMonsterByScene(tile.getSceneType());
+                    Monster newMonster = getTerrain(tile.getSceneType()).createMonster();
                     tile.setMonster(newMonster);
                 }
             }
         }
-    }
-
-    private Item createResourceByScene(String scene) {
-        switch (scene) {
-            case "树林":
-                return new Tool("藤蔓", "material", "合成材料", "img/vine.png", 1 + random.nextInt(3), 0, 0, 0);
-            case "沙滩":
-                if (random.nextBoolean()) {
-                    return new Tool("树枝", "material", "合成材料", "img/stick.png", 1 + random.nextInt(2), 0, 0, 0);
-                } else {
-                    return new Food("椰子", "food", "解渴", "img/coconut.png", 1, "thirst", 20);
-                }
-            case "岩石区":
-                return new Tool("石头", "material", "合成材料", "img/stone.png", 1 + random.nextInt(3), 0, 0, 0);
-            case "海边":
-                return new Tool("贝壳", "material", "合成材料", "img/shell.png", 1 + random.nextInt(3), 0, 0, 0);
-            default:
-                return null;
-        }
-    }
-
-    private Monster createMonsterByScene(String scene) {
-        switch (scene) {
-            case "树林":
-                return new Monkey();
-            case "沙滩":
-                return random.nextBoolean() ? new Monkey() : new Crab();
-            case "岩石区":
-                return new BlueSheep();
-            case "海边":
-                return new TigerShark();
-            default:
-                return null;
-        }
-    }
-
-    // ---------- 合成配方 ----------
-    private void initRecipes() {
-        recipes = new HashMap<>();
-
-        // 木棒：3树枝 + 2藤蔓
-        HashMap<String, Integer> woodClub = new HashMap<>();
-        woodClub.put("树枝", 3);
-        woodClub.put("藤蔓", 2);
-        recipes.put("木棒", woodClub);
-
-        // 贝刃：3贝壳 + 2藤蔓
-        HashMap<String, Integer> shellBlade = new HashMap<>();
-        shellBlade.put("贝壳", 3);
-        shellBlade.put("藤蔓", 2);
-        recipes.put("贝刃", shellBlade);
-
-        // 石剑：3石头 + 2藤蔓
-        HashMap<String, Integer> stoneSword = new HashMap<>();
-        stoneSword.put("石头", 3);
-        stoneSword.put("藤蔓", 2);
-        recipes.put("石剑", stoneSword);
-
-        // 铁剑：3矿石 + 2藤蔓（矿石来自海边）
-        HashMap<String, Integer> ironSword = new HashMap<>();
-        ironSword.put("矿石", 3);
-        ironSword.put("藤蔓", 2);
-        recipes.put("铁剑", ironSword);
     }
 
     // ---------- 探索格子 ----------
@@ -238,7 +181,7 @@ public class GameService {
         player.checkGameOver();
     }
 
-    // ---------- 回合制战斗（已修复player.attack()报错，改为attackMonster） ----------
+    // ---------- 回合制战斗 ----------
     private void startBattle(Monster monster, MapTile tile) {
         while (!monster.isDead() && player.getHp() > 0) {
             boolean killSuccess = player.attackMonster(monster);
@@ -267,10 +210,10 @@ public class GameService {
             System.out.println("行动点已用完，请进入下一天！");
             return;
         }
-        player.rest();
-        if (player.getActionPoint() == 0 && !player.isGameOver() && !player.isGameWin()) {
-            System.out.println("行动点已用完，请进入下一天！");
-        }
+        // 使用地形类的休息效果
+        Terrain terrain = getTerrain(player.getCurrentArea());
+        String effect = terrain.getRestEffect(player);
+        System.out.println(effect);
         player.checkGameOver();
     }
 
@@ -285,7 +228,7 @@ public class GameService {
         System.out.println("进入第 " + player.getDay() + " 天，行动点重置为10");
     }
 
-    // ---------- 建造灯塔（兼容Player双同步进度+碎片） ----------
+    // ---------- 建造灯塔 ----------
     public void buildLighthouse() {
         if (player.isGameOver() || player.isGameWin()) {
             System.out.println("游戏已结束");
@@ -302,7 +245,7 @@ public class GameService {
             System.out.println("游戏已结束，无法合成");
             return false;
         }
-        Map<String, Integer> required = recipes.get(recipeName);
+        Map<String, Integer> required = RecipeManagement.RECIPES.get(recipeName);
         if (required == null) {
             System.out.println("未知配方：" + recipeName);
             return false;
@@ -341,6 +284,7 @@ public class GameService {
         }
     }
 
+    // ---------- 合成工具方法 ----------
     private void removeMaterialFromBackpack(String materialName, int count) {
         List<Item> backpack = player.getBackpack();
         Iterator<Item> it = backpack.iterator();
@@ -364,14 +308,16 @@ public class GameService {
 
     private Tool createToolByName(String name) {
         switch (name) {
+            case "贝刃":
+                return new Tool("贝刃", "weapon", "用来开椰子", "img/shell_blade.png", 1, 15, 0, 15);
+            case "石刃":
+                return new Tool("石刃", "weapon", "锋利石刃", "img/stone_blade.png", 1, 12, 0, 20);
             case "木棒":
                 return new Tool("木棒", "weapon", "近战武器", "img/w_club.png", 1, 10, 0, 30);
-            case "贝刃":
-                return new Tool("贝刃", "weapon", "近战武器", "img/blade.png", 1, 15, 0, 15);
+            case "锤子":
+                return new Tool("锤子", "weapon", "钝器", "img/hammer.png", 1, 8, 0, 25);
             case "石剑":
                 return new Tool("石剑", "weapon", "近战武器", "img/s_sword.png", 1, 15, 0, 30);
-            case "铁剑":
-                return new Tool("铁剑", "weapon", "近战武器", "img/i_sword.png", 1, 30, 0, 45);
             default:
                 return null;
         }
@@ -442,6 +388,10 @@ public class GameService {
             Tool t = (Tool) src;
             return new Tool(t.getName(), t.getType(), t.getEffect(), t.getImgPath(),
                     t.getCount(), t.getAttackBonus(), t.getCollectBonus(), t.getDurability());
+        } else if (src instanceof Clip) {
+            Clip c = (Clip) src;
+            return new Clip(c.getName(), c.getType(), c.getEffect(), c.getImgPath(),
+                    c.getCount(), c.getClipId());
         } else {
             return null;
         }
@@ -451,7 +401,6 @@ public class GameService {
     public Player getPlayer() { return player; }
     public MapTile[][] getMap() { return map; }
     public int getMapSize() { return mapSize; }
-    public Map<String, Map<String, Integer>> getRecipes() { return recipes; }
     public MapTile getTile(int row, int col) {
         if (row >= 0 && row < mapSize && col >= 0 && col < mapSize) return map[row][col];
         return null;
