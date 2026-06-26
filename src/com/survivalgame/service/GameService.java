@@ -20,7 +20,7 @@ public class GameService {
 
     private Player player;                 // 玩家单例引用
     private MapTile[][] map;               // 网格地图 (45*45)
-    private int mapSize = 45;              // 固定45
+    private final int mapSize = 45;              // 固定45
     private Random random;                 // 随机数生成器
     private Map<String, Map<String, Integer>> recipes;  // 合成配方
 
@@ -109,7 +109,6 @@ public class GameService {
             case "树林":
                 return new Monkey();
             case "沙滩":
-                // 临时使用 Crab，正式应创建 WildBoar 和 Rabbit
                 return new Crab();
             case "岩石区":
                 return new BlueSheep();

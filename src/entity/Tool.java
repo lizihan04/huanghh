@@ -1,6 +1,6 @@
 package entity;
 
-public class Tool extends Item{
+public class Tool extends Item implements java.io.Serializable {
     //工具独有的属性：攻击加成，采集加成（，防御加成），耐久度
     private int attackBonus;
     private int collectBonus;
