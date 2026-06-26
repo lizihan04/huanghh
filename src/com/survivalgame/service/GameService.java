@@ -29,12 +29,12 @@ public class GameService {
         this.player = Player.getInstance();
         this.player.initPlayer();
         this.random = new Random();
-        initTerrains();                    // ← 新增：初始化地形
+        initTerrains();
         generateMap();
         refreshMapResourcesAndMonsters();
-        int center = (mapSize - 1) / 2;
-        player.setCurrentArea(map[center][center].getSceneType());
-        System.out.println("游戏初始化完成，欢迎来到荒岛！");
+        // 玩家出生在沙滩
+        player.setCurrentArea("沙滩");
+        System.out.println("游戏初始化完成，欢迎来到荒岛！你出生在沙滩。");
     }
 
     // ---------- 地形服务 ----------
@@ -87,6 +87,61 @@ public class GameService {
             }
         }
     }
+
+    // ===================== 获取区域信息（供UI调用） =====================
+    /**
+     * 获取玩家当前所在区域
+     */
+    public String getCurrentArea() {
+        return player.getCurrentArea();
+    }
+
+    /**
+     * 获取玩家当前区域信息（区域名 + 对应的背景图片路径）
+     */
+    public AreaInfo getCurrentAreaInfo() {
+        String area = player.getCurrentArea();
+        String imagePath = getAreaImage(area);
+        return new AreaInfo(area, imagePath);
+    }
+
+    /**
+     * 根据区域名称获取对应的背景图片路径
+     */
+    private String getAreaImage(String area) {
+        switch (area) {
+            case "沙滩":
+                return "images/img_map/map_beach.png";
+            case "树林":
+                return "images/img_map/map_forest.png";
+            case "岩石区":
+                return "images/img_map/map_rocky.png";
+            case "海边":
+                return "images/img_map/map_sea.png";
+            default:
+                return "images/img_map/map_beach.png";
+        }
+    }
+
+    /**
+     * 获取所有可用区域列表（供UI显示传送按钮）
+     */
+    public List<String> getAvailableAreas() {
+        return Arrays.asList("沙滩", "树林", "岩石区", "海边");
+    }
+
+    /**
+     * 获取所有可用区域及其对应的图片路径
+     */
+    public Map<String, String> getAvailableAreasWithImages() {
+        Map<String, String> areaMap = new HashMap<>();
+        areaMap.put("沙滩", "images/img_map/map_beach.png");
+        areaMap.put("树林", "images/img_map/map_forest.png");
+        areaMap.put("岩石区", "images/img_map/map_rocky.png");
+        areaMap.put("海边", "images/img_map/map_sea.png");
+        return areaMap;
+    }
+
 
     // ---------- 地图生成 ----------
     private void generateMap() {
