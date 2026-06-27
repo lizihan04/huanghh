@@ -5,10 +5,9 @@ import java.util.List;
 
 /**
  * 玩家单例类
- * 适配GameService存档、地图、战斗逻辑
- * 同时保留lighthouseProgress进度字段兼容旧代码，底层通关逻辑以碎片为准
- * 补齐setGameMap/getGameMap、setActionPoint/setDay/setDefense等全部缺失方法
- * 攻击方法：attackMonster(Monster monster)
+ * 包含完整背包底层逻辑：固定物品校验、拾取堆叠、丢弃、食用、查询、清空
+ * 所有存入背包的道具强制校验，仅GameItemConfig枚举内预设固定物品可存入
+ * JavaFX界面仅调用本类公开方法，不直接操作背包集合
  */
 public class Player {
     // ====================== 单例模式 ======================
@@ -32,14 +31,14 @@ public class Player {
     private int baseAttack;  // 玩家基础攻击力
     private int defense;     // 玩家防御力，受伤减免伤害
 
-    // ====================== 地图与道具 ======================
+    // ====================== 地图与道具背包 ======================
     private String currentArea;
+    // 私有背包容器，仅存储GameItemConfig定义的固定合法物品
     private List<Item> backpack;
     // 1. 灯塔碎片（真实通关判定）
     private int lighthouseFragmentCount;
-    // 2. 灯塔进度百分比（兼容GameService旧代码，同步碎片数值）
+    // 2. 灯塔进度百分比（兼容旧代码，和碎片双向同步）
     private int lighthouseProgress;
-    // 新增地图数组，适配存档setGameMap/getGameMap
     private MapTile[][] gameMap;
 
     // ====================== 游戏胜负状态 ======================
@@ -69,7 +68,7 @@ public class Player {
         this.isGameWin = false;
     }
 
-    // ====================== 地图存取方法（修复setGameMap/getGameMap报错） ======================
+    // ====================== 地图存取 ======================
     public void setGameMap(MapTile[][] gameMap) {
         this.gameMap = gameMap;
     }
@@ -77,7 +76,7 @@ public class Player {
         return gameMap;
     }
 
-    // ====================== 行动方法 ======================
+    // ====================== 行动相关方法 ======================
     public void doAction(String targetArea) {
         if (isGameOver || isGameWin || actionPoint <= 0) {
             System.out.println("行动力不足或游戏已结束，无法行动！");
@@ -116,22 +115,18 @@ public class Player {
         checkGameOver();
     }
 
-    // ====================== 灯塔逻辑（碎片+进度双向同步） ======================
+    // ====================== 灯塔碎片同步逻辑 ======================
     /**
-     * 拾取碎片，同步更新进度百分比（4碎片=100进度）
+     * 拾取灯塔碎片，同步更新进度
      */
     public void pickLighthouseFragment() {
         if (isGameOver || isGameWin) return;
         lighthouseFragmentCount++;
-        // 碎片同步换算进度：1碎片=25%
-        this.lighthouseProgress = lighthouseFragmentCount * 25;
+        lighthouseProgress = lighthouseFragmentCount * 25;
         System.out.println("获得灯塔碎片！当前碎片：" + lighthouseFragmentCount + "/4，建造进度：" + lighthouseProgress + "%");
         checkGameOver();
     }
 
-    /**
-     * 兼容旧GameService建造方法，直接增加进度，同步碎片数量
-     */
     public void buildLighthouse() {
         if (isGameOver || isGameWin) return;
         if (lighthouseProgress >= 100) {
@@ -140,23 +135,25 @@ public class Player {
         }
         lighthouseProgress += 25;
         if (lighthouseProgress > 100) lighthouseProgress = 100;
-        // 进度同步换算碎片
-        this.lighthouseFragmentCount = lighthouseProgress / 25;
+        lighthouseFragmentCount = lighthouseProgress / 25;
         System.out.println("灯塔建造进度提升，当前：" + lighthouseProgress + "%，碎片：" + lighthouseFragmentCount + "/4");
         checkGameOver();
     }
 
-    // ====================== 玩家攻击怪物（GameService里player.attack()改为player.attackMonster()） ======================
+    // ====================== 战斗相关 ======================
     public boolean attackMonster(Monster monster) {
         int totalToolBonus = 0;
+        int totalCollectBonus = 0;
         for (Item item : backpack) {
             if (item instanceof Tool) {
                 Tool tool = (Tool) item;
                 totalToolBonus += tool.getAttackBonus();
+                totalCollectBonus += tool.getCollectBonus();
             }
         }
         int totalDmg = this.baseAttack + totalToolBonus;
         System.out.println("你发动攻击，总伤害：" + totalDmg);
+        System.out.println("当前背包全部工具采集加成：" + totalCollectBonus);
 
         monster.takeDamage(totalDmg);
 
@@ -170,14 +167,27 @@ public class Player {
         }
     }
 
-    // ====================== 受伤逻辑 ======================
+    /**
+     * 获取背包内全部工具总采集加成（底层采集逻辑使用）
+     */
+    public int getAllCollectBonus() {
+        int sumBonus = 0;
+        for (Item item : backpack) {
+            if (item instanceof Tool) {
+                sumBonus += ((Tool) item).getCollectBonus();
+            }
+        }
+        return sumBonus;
+    }
+
+    // ====================== 受伤扣血 ======================
     public void takeDamage(int monsterAtk) {
         int realDamage = Math.max(1, monsterAtk - this.defense);
         setHp(this.hp - realDamage);
         System.out.println("你受到 " + realDamage + " 点伤害！");
     }
 
-    // ====================== 猴子偷窃 ======================
+    // ====================== 猴子偷窃逻辑 ======================
     public Item getRandomStealableItem() {
         List<Item> canStealList = new ArrayList<>();
         for (Item item : backpack) {
@@ -190,21 +200,119 @@ public class Player {
         return canStealList.get(randomIndex);
     }
 
-    // ====================== 背包操作 ======================
+    // ====================== 背包底层核心逻辑（JavaFX界面调用入口） ======================
+    /**
+     * 拾取物品存入背包
+     * 底层强制校验：仅GameItemConfig预设固定物品允许存入，拦截自定义道具
+     * 同名道具自动堆叠数量，拾取灯塔碎片自动同步计数
+     * @param item 待存入的道具对象
+     */
     public void addItem(Item item) {
-        for (Item i : backpack) {
-            if (i.getName().equals(item.getName())) {
-                i.addCount(item.getCount());
+        // 校验是否为系统规定的合法固定物品
+        boolean legalItem = false;
+        for (GameItemConfig cfg : GameItemConfig.values()) {
+            if (cfg.getName().equals(item.getName())) {
+                legalItem = true;
+                break;
+            }
+        }
+        if (!legalItem) {
+            System.out.println("底层拦截：非法自定义道具【" + item.getName() + "】禁止存入背包");
+            return;
+        }
+
+        // 同名道具堆叠
+        for (Item bagItem : backpack) {
+            if (bagItem.getName().equals(item.getName())) {
+                bagItem.addCount(item.getCount());
                 if ("灯塔碎片".equals(item.getName())) {
                     pickLighthouseFragment();
                 }
                 return;
             }
         }
+        // 无同名则新增
         backpack.add(item);
         if ("灯塔碎片".equals(item.getName())) {
             pickLighthouseFragment();
         }
+    }
+
+    /**
+     * 丢弃指定数量道具
+     * @param targetItem 背包内目标道具
+     * @param dropCount 丢弃数量
+     */
+    public void dropItem(Item targetItem, int dropCount) {
+        if (isGameOver || isGameWin || targetItem == null || dropCount <= 0) {
+            return;
+        }
+        // 遍历背包
+        for (Item bagItem : backpack) {
+            if (bagItem.getName().equals(targetItem.getName())) {
+                int remainNum = bagItem.getCount() - dropCount;
+                if (remainNum <= 0) {
+                    // 剩余数量不足，全部移除
+                    backpack.remove(bagItem);
+                    System.out.println("丢弃：全部移除【" + bagItem.getName() + "】");
+                } else {
+                    // 扣除对应数量
+                    bagItem.setCount(remainNum);
+                    // 这里改为 bagItem.getName()，消除红色报错
+                    System.out.println("丢弃" + dropCount + "个" + bagItem.getName() + "，剩余数量：" + remainNum);
+                }
+                return;
+            }
+        }
+        // 循环走完没找到对应道具
+        System.out.println("背包不存在该道具，丢弃失败");
+    }
+
+    /**
+     * 使用食物，自动调用Food重写的use方法，扣数量+恢复生存属性
+     * @param foodItem 背包内食物道具
+     */
+    public void useFood(Item foodItem) {
+        if (isGameOver || isGameWin || !(foodItem instanceof Food)) {
+            System.out.println("使用失败：该物品不是食物");
+            return;
+        }
+        Food food = (Food) foodItem;
+        food.use(this);
+    }
+
+    /**
+     * 根据道具名称查询背包内物品
+     * @param itemName 道具名称（必须是GameItemConfig内定义名称）
+     * @return 找到返回道具，无则返回null
+     */
+    public Item findItemByName(String itemName) {
+        for (Item bagItem : backpack) {
+            if (bagItem.getName().equals(itemName)) {
+                return bagItem;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 清空整个背包，同步重置灯塔碎片与进度
+     */
+    public void clearBackpack() {
+        backpack.clear();
+        lighthouseFragmentCount = 0;
+        lighthouseProgress = 0;
+        System.out.println("背包已全部清空，灯塔碎片清零");
+        checkGameOver();
+    }
+
+    /**
+     * 对外提供背包只读数据副本（JavaFX界面渲染专用）
+     * 外部无法直接修改内部原始背包集合，所有增删改只能通过本类方法
+     * @return 背包物品列表副本
+     */
+    public List<Item> getBackpack() {
+        return new ArrayList<>(backpack);
     }
 
     // ====================== 胜负判定 ======================
@@ -220,14 +328,13 @@ public class Player {
             }
             return;
         }
-        // 胜利条件：进度100% 等价于4碎片
         if (lighthouseProgress >= 100) {
             this.isGameWin = true;
             System.out.println("恭喜！灯塔建造完成，成功通关荒岛生存！");
         }
     }
 
-    // ====================== Getter & Setter（补齐所有缺失setter） ======================
+    // ====================== Getter & Setter ======================
     public int getHp() { return hp; }
     public void setHp(int hp) {
         this.hp = Math.max(0, Math.min(100, hp));
@@ -253,13 +360,11 @@ public class Player {
     }
 
     public int getActionPoint() { return actionPoint; }
-    // 新增setActionPoint 修复报错
     public void setActionPoint(int actionPoint) {
         this.actionPoint = Math.max(0, Math.min(10, actionPoint));
     }
 
     public int getDay() { return day; }
-    // 新增setDay 修复报错
     public void setDay(int day) {
         this.day = Math.max(1, day);
         checkGameOver();
@@ -268,13 +373,10 @@ public class Player {
     public String getCurrentArea() { return currentArea; }
     public void setCurrentArea(String currentArea) { this.currentArea = currentArea; }
 
-    public List<Item> getBackpack() { return backpack; }
-
     public int getBaseAttack() { return baseAttack; }
     public void setBaseAttack(int baseAttack) { this.baseAttack = baseAttack; }
 
     public int getDefense() { return defense; }
-    // 新增setDefense 修复报错
     public void setDefense(int defense) {
         this.defense = Math.max(0, defense);
     }
@@ -282,7 +384,6 @@ public class Player {
     public boolean isGameOver() { return isGameOver; }
     public boolean isGameWin() { return isGameWin; }
 
-    // 灯塔进度、碎片全套get/set 兼容GameService
     public int getLighthouseFragmentCount() { return lighthouseFragmentCount; }
     public void setLighthouseFragmentCount(int count) {
         this.lighthouseFragmentCount = Math.max(0, Math.min(4, count));
