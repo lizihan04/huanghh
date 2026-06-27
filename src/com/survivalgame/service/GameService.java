@@ -7,8 +7,7 @@ import java.util.*;
 
 /**
  * 游戏核心业务逻辑服务类（单例）
- * 负责：区域管理、传送、休息、战斗、合成、天数管理、存档读档
- * 设计说明：四个独立区域（沙滩/树林/岩石区/海边），通过传送切换
+ * 负责：区域管理、传送、探索、休息、战斗、合成、天数管理、存档读档
  */
 public class GameService {
 
@@ -19,7 +18,6 @@ public class GameService {
         return instance;
     }
 
-    // ===================== 核心对象 =====================
     private Player player;
     private Random random;
     private Map<String, Terrain> terrains;
@@ -30,7 +28,6 @@ public class GameService {
         this.player.initPlayer();
         this.random = new Random();
         initTerrains();
-        // 玩家默认出生在沙滩
         player.setCurrentArea("沙滩");
         System.out.println("游戏初始化完成，欢迎来到荒岛！你出生在沙滩。");
     }
@@ -54,13 +51,7 @@ public class GameService {
     }
 
     // ===================== 传送功能 =====================
-    /**
-     * 传送到指定区域
-     * @param targetArea 目标区域：沙滩/树林/岩石区/海边
-     * 消耗1行动点，疲惫+3，30%概率遭遇该区域怪物
-     */
     public void switchArea(String targetArea) {
-        // 1. 校验合法性
         List<String> areaList = Arrays.asList("沙滩", "树林", "岩石区", "海边");
         if (!areaList.contains(targetArea)) {
             System.out.println("传送失败：区域名称无效！可选：沙滩、树林、岩石区、海边");
@@ -79,39 +70,62 @@ public class GameService {
             return;
         }
 
-        // 2. 消耗行动力
         player.doAction(null);
         player.setCurrentArea(targetArea);
         System.out.println("传送成功！当前位置：【" + targetArea + "】");
+        player.checkGameOver();
+    }
 
-        // 3. 30%概率遭遇怪物
-        if (random.nextDouble() < 0.3) {
-            Monster monster = getTerrain(targetArea).createMonster();
-            if (monster != null) {
-                System.out.println("抵达" + targetArea + "，遭遇怪物：" + monster.getName() + "！");
-                startBattle(monster);
+    // ===================== 探索功能 =====================
+    public void explore() {
+        if (player.isGameOver() || player.isGameWin()) {
+            System.out.println("游戏已结束，无法探索");
+            return;
+        }
+        if (player.getActionPoint() <= 0) {
+            System.out.println("行动力不足，无法探索！自动进入下一天");
+            nextDay();
+            return;
+        }
+
+        player.doAction(null);
+        Terrain terrain = getTerrain(player.getCurrentArea());
+        double r = random.nextDouble();
+
+        if (r < 0.4) {
+            Item resource = terrain.createResource();
+            if (resource != null) {
+                player.addItem(resource);
+                System.out.println("在【" + player.getCurrentArea() + "】探索，发现 " + resource.getName() + " x" + resource.getCount());
+            } else {
+                System.out.println("探索一番，什么也没发现");
             }
+        } else if (r < 0.8) {
+            Monster monster = terrain.createMonster();
+            if (monster != null) {
+                System.out.println("在【" + player.getCurrentArea() + "】探索，遭遇 " + monster.getName() + "！");
+                startBattle(monster);
+            } else {
+                System.out.println("探索一番，没有发现怪物");
+            }
+        } else {
+            System.out.println("在【" + player.getCurrentArea() + "】探索了一番，什么也没有发生");
         }
         player.checkGameOver();
     }
 
     // ===================== 休息功能 =====================
-    /**
-     * 在当前区域休息
-     * 消耗1行动点，效果取决于当前区域地形
-     */
     public void rest() {
         if (player.isGameOver() || player.isGameWin()) {
             System.out.println("游戏已结束，无法休息");
             return;
         }
         if (player.getActionPoint() <= 0) {
-            System.out.println("行动力不足，无法休息！请进入下一天");
+            System.out.println("行动力不足，自动进入下一天");
+            nextDay();
             return;
         }
-        // 调用玩家休息方法（消耗行动点）
         player.rest();
-        // 应用地形效果
         Terrain terrain = getTerrain(player.getCurrentArea());
         String effect = terrain.getRestEffect(player);
         System.out.println(effect);
@@ -134,29 +148,6 @@ public class GameService {
                 break;
             }
         }
-    }
-
-    /**
-     * 在当前区域采集物资（供UI调用）
-     */
-    public Item collectResource() {
-        if (player.isGameOver() || player.isGameWin()) {
-            System.out.println("游戏已结束，无法采集");
-            return null;
-        }
-        if (player.getActionPoint() <= 0) {
-            System.out.println("行动力不足，无法采集！");
-            return null;
-        }
-        player.doAction(null);
-        Terrain terrain = getTerrain(player.getCurrentArea());
-        Item resource = terrain.createResource();
-        if (resource != null) {
-            player.addItem(resource);
-            System.out.println("采集到：" + resource.getName() + " x" + resource.getCount());
-        }
-        player.checkGameOver();
-        return resource;
     }
 
     // ===================== 天数管理 =====================
@@ -193,7 +184,6 @@ public class GameService {
             return false;
         }
 
-        // 检查材料
         List<Item> backpack = player.getBackpack();
         Map<String, Integer> own = new HashMap<>();
         for (Item item : backpack) {
@@ -210,7 +200,6 @@ public class GameService {
             }
         }
 
-        // 扣除材料
         for (Map.Entry<String, Integer> entry : required.entrySet()) {
             String mat = entry.getKey();
             int need = entry.getValue();
