@@ -173,6 +173,8 @@ public class GameService {
     }
 
     // ===================== 合成系统 =====================
+
+    // 供 UI 工作台调用
     public String[] getRecipeNames() {
         return RecipeManagement.RECIPES.keySet().toArray(new String[0]);
     }
@@ -190,34 +192,76 @@ public class GameService {
             System.out.println("游戏已结束，无法合成");
             return false;
         }
-        Map<String, Integer> required = RecipeManagement.RECIPES.get(recipeName);
-        if (required == null) {
+
+        // 检查配方是否存在
+        if (!RecipeManagement.RECIPES.containsKey(recipeName)) {
             System.out.println("未知配方：" + recipeName);
             return false;
         }
 
-        List<Item> backpack = player.getBackpack();
-        Map<String, Integer> own = new HashMap<>();
-        for (Item item : backpack) {
-            if (item.getType().equals("material")) {
-                own.put(item.getName(), own.getOrDefault(item.getName(), 0) + item.getCount());
-            }
-        }
-        for (Map.Entry<String, Integer> entry : required.entrySet()) {
-            String mat = entry.getKey();
-            int need = entry.getValue();
-            if (own.getOrDefault(mat, 0) < need) {
-                System.out.println("材料不足：" + mat + " 需要 " + need);
+        // 获取配方材料
+        Map<String, Integer> required = RecipeManagement.RECIPES.get(recipeName);
+
+        // 逐一检查每种材料
+        if (required.containsKey("树枝")) {
+            int need = required.get("树枝");
+            int have = countMaterialInBackpack("树枝");
+            if (have < need) {
+                System.out.println("材料不足：树枝 需要 " + need + " 个，当前有 " + have + " 个");
                 return false;
             }
         }
 
-        for (Map.Entry<String, Integer> entry : required.entrySet()) {
-            String mat = entry.getKey();
-            int need = entry.getValue();
-            removeMaterialFromBackpack(mat, need);
+        if (required.containsKey("石头")) {
+            int need = required.get("石头");
+            int have = countMaterialInBackpack("石头");
+            if (have < need) {
+                System.out.println("材料不足：石头 需要 " + need + " 个，当前有 " + have + " 个");
+                return false;
+            }
         }
 
+        if (required.containsKey("贝壳")) {
+            int need = required.get("贝壳");
+            int have = countMaterialInBackpack("贝壳");
+            if (have < need) {
+                System.out.println("材料不足：贝壳 需要 " + need + " 个，当前有 " + have + " 个");
+                return false;
+            }
+        }
+
+        if (required.containsKey("藤蔓")) {
+            int need = required.get("藤蔓");
+            int have = countMaterialInBackpack("藤蔓");
+            if (have < need) {
+                System.out.println("材料不足：藤蔓 需要 " + need + " 个，当前有 " + have + " 个");
+                return false;
+            }
+        }
+
+        // 所有材料足够，直接扣除材料
+        for (Map.Entry<String, Integer> entry : required.entrySet()) {
+            String materialName = entry.getKey();
+            int needCount = entry.getValue();
+            List<Item> backpack = player.getBackpack();
+            Iterator<Item> it = backpack.iterator();
+            int remaining = needCount;
+            while (it.hasNext() && remaining > 0) {
+                Item item = it.next();
+                if (item.getName().equals(materialName) && "material".equals(item.getType())) {
+                    int have = item.getCount();
+                    if (have <= remaining) {
+                        remaining -= have;
+                        it.remove();
+                    } else {
+                        item.setCount(have - remaining);
+                        remaining = 0;
+                    }
+                }
+            }
+        }
+
+        // 生成工具
         Tool product = createToolByName(recipeName);
         if (product != null) {
             player.addItem(product);
@@ -229,25 +273,16 @@ public class GameService {
         }
     }
 
-    private void removeMaterialFromBackpack(String materialName, int count) {
+    // 辅助方法：统计背包中某种材料的数量
+    private int countMaterialInBackpack(String materialName) {
         List<Item> backpack = player.getBackpack();
-        Iterator<Item> it = backpack.iterator();
-        while (it.hasNext() && count > 0) {
-            Item item = it.next();
-            if (item.getName().equals(materialName) && item.getType().equals("material")) {
-                int have = item.getCount();
-                if (have <= count) {
-                    count -= have;
-                    it.remove();
-                } else {
-                    item.setCount(have - count);
-                    count = 0;
-                }
+        int total = 0;
+        for (Item item : backpack) {
+            if (item.getName().equals(materialName) && "material".equals(item.getType())) {
+                total += item.getCount();
             }
         }
-        if (count > 0) {
-            System.out.println("警告：移除材料时数量不足，请检查逻辑");
-        }
+        return total;
     }
 
     private Tool createToolByName(String name) {
