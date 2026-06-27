@@ -173,6 +173,18 @@ public class GameService {
     }
 
     // ===================== 合成系统 =====================
+    public String[] getRecipeNames() {
+        return RecipeManagement.RECIPES.keySet().toArray(new String[0]);
+    }
+
+    public Map<String, Map<String, Integer>> getAllRecipes() {
+        return RecipeManagement.RECIPES;
+    }
+
+    public Map<String, Integer> getRecipeDetail(String recipeName) {
+        return RecipeManagement.RECIPES.get(recipeName);
+    }
+
     public boolean craftItem(String recipeName) {
         if (player.isGameOver() || player.isGameWin()) {
             System.out.println("游戏已结束，无法合成");
