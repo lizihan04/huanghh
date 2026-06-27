@@ -7,7 +7,8 @@ import java.util.*;
 
 /**
  * 游戏核心业务逻辑服务类（单例）
- * 负责：地图生成、每日刷新、探索事件、战斗系统、合成系统、天数管理、存档读档
+ * 负责：区域管理、传送、休息、战斗、合成、天数管理、存档读档
+ * 设计说明：四个独立区域（沙滩/树林/岩石区/海边），通过传送切换
  */
 public class GameService {
 
@@ -18,26 +19,23 @@ public class GameService {
         return instance;
     }
 
+    // ===================== 核心对象 =====================
     private Player player;
-    private MapTile[][] map;
-    private final int mapSize = 45;
     private Random random;
-    private Map<String, Terrain> terrains;  // ← 新增：地形映射
+    private Map<String, Terrain> terrains;
 
-    // ---------- 初始化 ----------
+    // ===================== 初始化 =====================
     public void initGame() {
         this.player = Player.getInstance();
         this.player.initPlayer();
         this.random = new Random();
         initTerrains();
-        generateMap();
-        refreshMapResourcesAndMonsters();
-        // 玩家出生在沙滩
+        // 玩家默认出生在沙滩
         player.setCurrentArea("沙滩");
         System.out.println("游戏初始化完成，欢迎来到荒岛！你出生在沙滩。");
     }
 
-    // ---------- 地形服务 ----------
+    // ===================== 地形服务 =====================
     private void initTerrains() {
         terrains = new HashMap<>();
         terrains.put("树林", Forest.getInstance());
@@ -55,194 +53,77 @@ public class GameService {
         return terrain;
     }
 
-    // ===================== 玩家主动切换区域 =====================
+    // ===================== 传送功能 =====================
+    /**
+     * 传送到指定区域
+     * @param targetArea 目标区域：沙滩/树林/岩石区/海边
+     * 消耗1行动点，疲惫+3，30%概率遭遇该区域怪物
+     */
     public void switchArea(String targetArea) {
+        // 1. 校验合法性
         List<String> areaList = Arrays.asList("沙滩", "树林", "岩石区", "海边");
         if (!areaList.contains(targetArea)) {
-            System.out.println("切换失败：区域名称无效！可选：沙滩、树林、岩石区、海边");
+            System.out.println("传送失败：区域名称无效！可选：沙滩、树林、岩石区、海边");
             return;
         }
         if (player.isGameOver() || player.isGameWin()) {
-            System.out.println("游戏已结束，无法切换区域！");
+            System.out.println("游戏已结束，无法传送！");
             return;
         }
         if (player.getActionPoint() <= 0) {
-            System.out.println("行动力不足，无法前往新区域！");
+            System.out.println("行动力不足，无法传送！");
             return;
         }
         if (player.getCurrentArea().equals(targetArea)) {
-            System.out.println("你当前已经在【" + targetArea + "】，无需重复切换");
+            System.out.println("你已经在【" + targetArea + "】，无需重复传送");
             return;
         }
 
+        // 2. 消耗行动力
         player.doAction(null);
         player.setCurrentArea(targetArea);
-        System.out.println("成功移动至：" + targetArea);
+        System.out.println("传送成功！当前位置：【" + targetArea + "】");
 
+        // 3. 30%概率遭遇怪物
         if (random.nextDouble() < 0.3) {
             Monster monster = getTerrain(targetArea).createMonster();
             if (monster != null) {
                 System.out.println("抵达" + targetArea + "，遭遇怪物：" + monster.getName() + "！");
-                startBattle(monster, null);
+                startBattle(monster);
             }
-        }
-    }
-
-    // ===================== 获取区域信息（供UI调用） =====================
-    /**
-     * 获取玩家当前所在区域
-     */
-    public String getCurrentArea() {
-        return player.getCurrentArea();
-    }
-
-    /**
-     * 获取玩家当前区域信息（区域名 + 对应的背景图片路径）
-     */
-    public AreaInfo getCurrentAreaInfo() {
-        String area = player.getCurrentArea();
-        String imagePath = getAreaImage(area);
-        return new AreaInfo(area, imagePath);
-    }
-
-    /**
-     * 根据区域名称获取对应的背景图片路径
-     */
-    private String getAreaImage(String area) {
-        switch (area) {
-            case "沙滩":
-                return "images/img_map/map_beach.png";
-            case "树林":
-                return "images/img_map/map_forest.png";
-            case "岩石区":
-                return "images/img_map/map_rocky.png";
-            case "海边":
-                return "images/img_map/map_sea.png";
-            default:
-                return "images/img_map/map_beach.png";
-        }
-    }
-
-    /**
-     * 获取所有可用区域列表（供UI显示传送按钮）
-     */
-    public List<String> getAvailableAreas() {
-        return Arrays.asList("沙滩", "树林", "岩石区", "海边");
-    }
-
-    /**
-     * 获取所有可用区域及其对应的图片路径
-     */
-    public Map<String, String> getAvailableAreasWithImages() {
-        Map<String, String> areaMap = new HashMap<>();
-        areaMap.put("沙滩", "images/img_map/map_beach.png");
-        areaMap.put("树林", "images/img_map/map_forest.png");
-        areaMap.put("岩石区", "images/img_map/map_rocky.png");
-        areaMap.put("海边", "images/img_map/map_sea.png");
-        return areaMap;
-    }
-
-
-    // ---------- 地图生成 ----------
-    private void generateMap() {
-        map = new MapTile[mapSize][mapSize];
-        double center = (mapSize - 1) / 2.0;
-
-        for (int i = 0; i < mapSize; i++) {
-            for (int j = 0; j < mapSize; j++) {
-                double dist = Math.sqrt(Math.pow(i - center, 2) + Math.pow(j - center, 2));
-
-                String sceneType;
-                if (dist < 8) {
-                    sceneType = "树林";
-                } else if (dist < 19) {
-                    sceneType = "沙滩";
-                } else if (dist < 35) {
-                    sceneType = "岩石区";
-                } else {
-                    sceneType = "海边";
-                }
-
-                String imgPath = "img/tile_" + sceneType + ".png";
-                MapTile tile = new MapTile(i, j, sceneType, imgPath);
-                map[i][j] = tile;
-            }
-        }
-        player.setGameMap(map);
-    }
-
-    // ---------- 刷新所有格子的资源与怪物 ----------
-    public void refreshMapResourcesAndMonsters() {
-        for (MapTile[] row : map) {
-            for (MapTile tile : row) {
-                tile.setResource(null);
-                tile.setMonster(null);
-
-                if (random.nextDouble() < 0.4) {
-                    Item newResource = getTerrain(tile.getSceneType()).createResource();
-                    tile.setResource(newResource);
-                }
-                if (random.nextDouble() < 0.4) {
-                    Monster newMonster = getTerrain(tile.getSceneType()).createMonster();
-                    tile.setMonster(newMonster);
-                }
-            }
-        }
-    }
-
-    // ---------- 探索格子 ----------
-    public void exploreTile(int row, int col) {
-        if (row < 0 || row >= mapSize || col < 0 || col >= mapSize) {
-            System.out.println("坐标无效");
-            return;
-        }
-        if (player.isGameOver() || player.isGameWin()) {
-            System.out.println("游戏已结束");
-            return;
-        }
-        if (player.getActionPoint() <= 0) {
-            System.out.println("行动点已用完，请进入下一天！");
-            return;
-        }
-
-        player.doAction(null);
-        MapTile tile = map[row][col];
-        player.setCurrentArea(tile.getSceneType());
-
-        double r = random.nextDouble();
-        if (r < 0.4) {
-            Item resource = tile.collectResource();
-            if (resource != null) {
-                player.addItem(resource);
-                System.out.println("在" + tile.getSceneType() + "发现 " + resource.getName() + " x" + resource.getCount());
-            } else {
-                System.out.println("这里没有物资");
-            }
-        } else if (r < 0.8) {
-            Monster monster = tile.encounterMonster();
-            if (monster != null) {
-                System.out.println("遭遇 " + monster.getName() + "！");
-                startBattle(monster, tile);
-            } else {
-                System.out.println("这里没有怪物出没");
-            }
-        } else {
-            System.out.println("探索一番，什么也没发生");
-        }
-
-        if (player.getActionPoint() == 0 && !player.isGameOver() && !player.isGameWin()) {
-            System.out.println("行动点已用完，请进入下一天！");
         }
         player.checkGameOver();
     }
 
-    // ---------- 回合制战斗 ----------
-    private void startBattle(Monster monster, MapTile tile) {
+    // ===================== 休息功能 =====================
+    /**
+     * 在当前区域休息
+     * 消耗1行动点，效果取决于当前区域地形
+     */
+    public void rest() {
+        if (player.isGameOver() || player.isGameWin()) {
+            System.out.println("游戏已结束，无法休息");
+            return;
+        }
+        if (player.getActionPoint() <= 0) {
+            System.out.println("行动力不足，无法休息！请进入下一天");
+            return;
+        }
+        // 调用玩家休息方法（消耗行动点）
+        player.rest();
+        // 应用地形效果
+        Terrain terrain = getTerrain(player.getCurrentArea());
+        String effect = terrain.getRestEffect(player);
+        System.out.println(effect);
+        player.checkGameOver();
+    }
+
+    // ===================== 战斗系统 =====================
+    private void startBattle(Monster monster) {
         while (!monster.isDead() && player.getHp() > 0) {
             boolean killSuccess = player.attackMonster(monster);
             if (killSuccess) {
                 monster.die(player);
-                if (tile != null) tile.setMonster(null);
                 System.out.println("战斗胜利！");
                 break;
             }
@@ -255,35 +136,41 @@ public class GameService {
         }
     }
 
-    // ---------- 休息 ----------
-    public void rest() {
+    /**
+     * 在当前区域采集物资（供UI调用）
+     */
+    public Item collectResource() {
         if (player.isGameOver() || player.isGameWin()) {
-            System.out.println("游戏已结束");
-            return;
+            System.out.println("游戏已结束，无法采集");
+            return null;
         }
         if (player.getActionPoint() <= 0) {
-            System.out.println("行动点已用完，请进入下一天！");
-            return;
+            System.out.println("行动力不足，无法采集！");
+            return null;
         }
-        // 使用地形类的休息效果
+        player.doAction(null);
         Terrain terrain = getTerrain(player.getCurrentArea());
-        String effect = terrain.getRestEffect(player);
-        System.out.println(effect);
+        Item resource = terrain.createResource();
+        if (resource != null) {
+            player.addItem(resource);
+            System.out.println("采集到：" + resource.getName() + " x" + resource.getCount());
+        }
         player.checkGameOver();
+        return resource;
     }
 
-    // ---------- 进入下一天 ----------
+    // ===================== 天数管理 =====================
     public void nextDay() {
         if (player.isGameOver() || player.isGameWin()) {
             System.out.println("游戏已结束");
             return;
         }
         player.nextDay();
-        refreshMapResourcesAndMonsters();
-        System.out.println("进入第 " + player.getDay() + " 天，行动点重置为10");
+        System.out.println("===== 第 " + player.getDay() + " 天 =====");
+        System.out.println("行动点已重置为10");
     }
 
-    // ---------- 建造灯塔 ----------
+    // ===================== 灯塔建造 =====================
     public void buildLighthouse() {
         if (player.isGameOver() || player.isGameWin()) {
             System.out.println("游戏已结束");
@@ -294,7 +181,7 @@ public class GameService {
         player.checkGameOver();
     }
 
-    // ---------- 合成物品 ----------
+    // ===================== 合成系统 =====================
     public boolean craftItem(String recipeName) {
         if (player.isGameOver() || player.isGameWin()) {
             System.out.println("游戏已结束，无法合成");
@@ -306,6 +193,7 @@ public class GameService {
             return false;
         }
 
+        // 检查材料
         List<Item> backpack = player.getBackpack();
         Map<String, Integer> own = new HashMap<>();
         for (Item item : backpack) {
@@ -322,6 +210,7 @@ public class GameService {
             }
         }
 
+        // 扣除材料
         for (Map.Entry<String, Integer> entry : required.entrySet()) {
             String mat = entry.getKey();
             int need = entry.getValue();
@@ -339,7 +228,6 @@ public class GameService {
         }
     }
 
-    // ---------- 合成工具方法 ----------
     private void removeMaterialFromBackpack(String materialName, int count) {
         List<Item> backpack = player.getBackpack();
         Iterator<Item> it = backpack.iterator();
@@ -364,28 +252,60 @@ public class GameService {
     private Tool createToolByName(String name) {
         switch (name) {
             case "贝刃":
-                return new Tool("贝刃", "weapon", "用来开椰子", "img/shell_blade.png", 1, 15, 0, 15);
+                return new Tool("贝刃", "weapon", "用来开椰子", "images/img_item/tool/item_shell_blade.png", 1, 15, 0, 15);
             case "石刃":
-                return new Tool("石斧", "weapon", "锋利石刃", "img/stone_blade.png", 1, 12, 0, 20);
+                return new Tool("石刃", "weapon", "锋利石刃", "images/img_item/tool/item_stone_blade.png", 1, 12, 0, 20);
             case "木棒":
-                return new Tool("木棒", "weapon", "近战武器", "img/w_club.png", 1, 10, 0, 30);
+                return new Tool("木棒", "weapon", "近战武器", "images/img_item/tool/item_wood_club.png", 1, 10, 0, 30);
             case "锤子":
-                return new Tool("锤子", "weapon", "钝器", "img/hammer.png", 1, 8, 0, 25);
+                return new Tool("锤子", "weapon", "钝器", "images/img_item/tool/item_hammer.png", 1, 8, 0, 25);
             case "石剑":
-                return new Tool("石剑", "weapon", "近战武器", "img/s_sword.png", 1, 15, 0, 30);
+                return new Tool("石剑", "weapon", "近战武器", "images/img_item/tool/item_stone_sword.png", 1, 15, 0, 30);
             default:
                 return null;
         }
     }
 
-    // ---------- 存档读档 ----------
+    // ===================== 获取区域信息（供UI调用） =====================
+    public String getCurrentArea() {
+        return player.getCurrentArea();
+    }
+
+    public AreaInfo getCurrentAreaInfo() {
+        String area = player.getCurrentArea();
+        String imagePath = getAreaImage(area);
+        return new AreaInfo(area, imagePath);
+    }
+
+    private String getAreaImage(String area) {
+        switch (area) {
+            case "沙滩": return "images/img_map/map_beach.png";
+            case "树林": return "images/img_map/map_forest.png";
+            case "岩石区": return "images/img_map/map_rocky.png";
+            case "海边": return "images/img_map/map_sea.png";
+            default: return "images/img_map/map_beach.png";
+        }
+    }
+
+    public List<String> getAvailableAreas() {
+        return Arrays.asList("沙滩", "树林", "岩石区", "海边");
+    }
+
+    public Map<String, String> getAvailableAreasWithImages() {
+        Map<String, String> areaMap = new HashMap<>();
+        areaMap.put("沙滩", "images/img_map/map_beach.png");
+        areaMap.put("树林", "images/img_map/map_forest.png");
+        areaMap.put("岩石区", "images/img_map/map_rocky.png");
+        areaMap.put("海边", "images/img_map/map_sea.png");
+        return areaMap;
+    }
+
+    // ===================== 存档读档 =====================
     public boolean saveGame() {
-        player.setGameMap(map);
         return FileUtil.getInstance().saveGame(player);
     }
 
     public boolean saveGame(String fileName) {
-        player.setGameMap(map);
         return FileUtil.getInstance().saveGame(player, fileName);
     }
 
@@ -402,11 +322,6 @@ public class GameService {
     private boolean loadGameInternal(Player loaded) {
         if (loaded == null) return false;
         copyPlayerData(loaded);
-        this.map = player.getGameMap();
-        if (this.map == null || this.map.length != mapSize) {
-            System.err.println("存档地图数据异常");
-            return false;
-        }
         this.random = new Random();
         System.out.println("游戏加载成功");
         return true;
@@ -430,7 +345,6 @@ public class GameService {
         }
         current.getBackpack().clear();
         current.getBackpack().addAll(newBackpack);
-        current.setGameMap(loaded.getGameMap());
         current.checkGameOver();
     }
 
@@ -452,12 +366,8 @@ public class GameService {
         }
     }
 
-    // ---------- Getter ----------
-    public Player getPlayer() { return player; }
-    public MapTile[][] getMap() { return map; }
-    public int getMapSize() { return mapSize; }
-    public MapTile getTile(int row, int col) {
-        if (row >= 0 && row < mapSize && col >= 0 && col < mapSize) return map[row][col];
-        return null;
+    // ===================== Getter =====================
+    public Player getPlayer() {
+        return player;
     }
 }
