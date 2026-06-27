@@ -6,7 +6,7 @@ public class TigerShark extends Monster {
         setName("虎鲨");
         setLife(120);
         setAttack(18);
-        setImgPath("img/shark.png");
+        setImgPath("img_monster/monster_shark.png");
     }
 
     @Override
@@ -19,6 +19,6 @@ public class TigerShark extends Monster {
     @Override
     protected Item getFixedDrop() {
         // 虎鲨掉落鱼肉
-        return new Food("鲨鱼肉", "食物", "恢复生命", "img/shark_meat.png", 1, "生命值", 35);
+        return new Food("鲨鱼肉", "食物", "恢复生命", "item_fish.png", 1, "生命值", 35);
     }
 }

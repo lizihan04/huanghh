@@ -11,7 +11,7 @@ public class Monkey extends Monster {
         super.setName("猴子");
         super.setLife(100);
         super.setAttack(20);
-        super.setImgPath("img/monkey.png");
+        super.setImgPath("monster_monkey.png");
     }
 
     @Override

@@ -5,7 +5,7 @@ public class BlueSheep extends Monster{
             setName("岩羊");
             setLife(80);
             setAttack(7);
-            setImgPath("img/sheep.png");
+            setImgPath("img_monster/monster_goat.png");
         }
 
         @Override
