@@ -1,5 +1,7 @@
 package entity;
 
+import java.io.Serializable;
+
 public class Fish2 extends Monster2{
     //构造方法
     public Fish2() {

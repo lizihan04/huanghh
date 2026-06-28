@@ -2,6 +2,8 @@ package entity;
 
 import com.survivalgame.service.GameLogic;
 
+import java.io.Serializable;
+
 public class Player2 {
     // 单例
     private static final Player2 instance = new Player2();

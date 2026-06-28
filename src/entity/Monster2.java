@@ -1,5 +1,7 @@
 package entity;
 
+import java.io.Serializable;
+
 public abstract class Monster2 {
     //怪物属性（名字、伤害、掉落物品）
     private String name;

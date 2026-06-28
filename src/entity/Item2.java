@@ -1,5 +1,7 @@
 package entity;
 
+import java.io.Serializable;
+
 public class Item2 {
     private String itemName;       // 物品名称
 

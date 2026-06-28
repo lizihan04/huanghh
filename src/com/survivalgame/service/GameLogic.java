@@ -8,6 +8,8 @@ import entity.Monster2;
 import entity.Player2;
 import java.util.Random;
 
+import com.survivalgame.util.FileUtil2;
+
 public class GameLogic {
     // 单例模式
     private static final GameLogic instance = new GameLogic();
@@ -133,5 +135,96 @@ public class GameLogic {
         boolean isLose = hp <= 0 || hunger >= 100 || thirst >= 100 || fatigue >= 100 || day > 30;
         boolean isWin = frag >= MAX_FRAGMENT;
         return isLose || isWin;
+    }
+
+    // ===================== 存档读档 =====================
+
+    //存档（默认文件名 gameSave.dat）
+    public boolean saveGame() {
+        return FileUtil2.getInstance().saveGame(player);
+    }
+
+    //存档（指定文件名）
+    public boolean saveGame(String fileName) {
+        return FileUtil2.getInstance().saveGame(player, fileName);
+    }
+
+    // 读档（默认文件名 gameSave.dat）
+    public boolean loadGame() {
+        Player2 loaded = FileUtil2.getInstance().loadGame();
+        if (loaded == null) {
+            return false;
+        }
+        copyPlayerData(loaded);
+        System.out.println(" 游戏加载完成！");
+        return true;
+    }
+
+    //读档（指定文件名）
+    public boolean loadGame(String fileName) {
+        Player2 loaded = FileUtil2.getInstance().loadGame(fileName);
+        if (loaded == null) {
+            return false;
+        }
+        copyPlayerData(loaded);
+        System.out.println(" 游戏加载完成！");
+        return true;
+    }
+
+    // 删除存档（默认文件名）
+    public boolean deleteSave() {
+        return FileUtil2.getInstance().deleteSave();
+    }
+
+    //删除存档（指定文件名）
+    public boolean deleteSave(String fileName) {
+        return FileUtil2.getInstance().deleteSave(fileName);
+    }
+
+    //检查存档是否存在（默认文件名）
+    public boolean hasSave() {
+        return FileUtil2.getInstance().hasSave();
+    }
+
+    //检查存档是否存在（指定文件名）
+    public boolean hasSave(String fileName) {
+        return FileUtil2.getInstance().hasSave(fileName);
+    }
+
+    //获取所有存档文件名列表
+    public String[] listSaveFiles() {
+        return FileUtil2.getInstance().listSaveFiles();
+    }
+
+
+    // ===================== 复制玩家数据（读档用） =====================
+
+    private void copyPlayerData(Player2 loaded) {
+        // 基础属性
+        player.setHp(loaded.getHp());
+        player.setHunger(loaded.getHunger());
+        player.setThirst(loaded.getThirst());
+        player.setFatigue(loaded.getFatigue());
+        player.setActionPoint(loaded.getActionPoint());
+        player.setDay(loaded.getDay());
+        player.setFragment(loaded.getFragment());
+        player.setBaseAttack(loaded.getBaseAttack());
+        player.setSpace(loaded.getSpace());
+        player.setGameOver(loaded.isGameOver());
+        player.setGameWin(loaded.isGameWin());
+
+        // 背包数据深拷贝
+        Item2[] loadedBag = loaded.getBackpackArr();
+        Item2[] currentBag = player.getBackpackArr();
+
+        for (int i = 0; i < loadedBag.length && i < currentBag.length; i++) {
+            Item2 loadedItem = loadedBag[i];
+            Item2 currentItem = currentBag[i];
+
+            if (loadedItem != null && currentItem != null) {
+                // 复制数量
+                currentItem.setOwnCount(loadedItem.getOwnCount());
+            }
+        }
     }
 }
