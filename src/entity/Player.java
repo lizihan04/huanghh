@@ -98,14 +98,11 @@ public class Player {
             return;
         }
         actionPoint--;
-        if ("沙滩".equals(currentArea)) {
-            fatigue = Math.max(0, fatigue - 20);
-            hp = Math.min(100, hp + 10);
-            System.out.println("在沙滩休息，疲惫-20");
-        } else {
-            fatigue = Math.max(0, fatigue - 10);
-            System.out.println("在" + currentArea + "休息，疲惫-10");
+        fatigue -= 10;
+        if (fatigue < 0) {
+            fatigue = 0;
         }
+        System.out.println("休息完毕，疲惫减少10，当前疲惫值：" + fatigue);
         checkGameOver();
     }
 
@@ -268,14 +265,6 @@ public class Player {
         food.use(this);
     }
 
-    /**
-     * 按名字查找背包道具
-     */
-    public Item findItemByName(String itemName) {
-        int idx = getItemIndexByName(itemName);
-        if(idx == -1) return null;
-        return backpackArr[idx];
-    }
 
     /**
      * 清空背包所有格子
