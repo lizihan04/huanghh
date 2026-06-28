@@ -5,4 +5,6 @@ public class Bag {
     public void setMainController(Main main) {
         this.main = main;
     }
+    //背包物品数量展示
+
 }

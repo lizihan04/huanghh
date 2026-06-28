@@ -1,7 +1,9 @@
 package gameUI.controller;
 
+import entity.Player;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +16,36 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class Main {
+    //属性栏
+    @FXML
+    private Label hpLabel;
+    @FXML
+    private Label hungerLabel;
+    @FXML
+    private Label thirstLabel;
+    @FXML
+    private Label fatigueLabel;
+    @FXML
+    private Label actionPointLabel;
+
+    private Player player = Player.getInstance();
+
+    //初始化属性
+    @FXML
+    public void initialize(){
+        player.initPlayer();
+        refreshUI();
+    }
+    // 刷新所有属性显示
+    public void refreshUI() {
+        hpLabel.setText("生命值：" + player.getHp());
+        hungerLabel.setText("饥饿值：" + player.getHunger());
+        thirstLabel.setText("饥渴值：" + player.getThirst());
+        fatigueLabel.setText("疲惫值：" + player.getFatigue());
+        actionPointLabel.setText("行动点：" + player.getActionPoint());
+    }
+
+    //页面操作
     @FXML
     private ScrollPane mainScrollPane;
     @FXML
