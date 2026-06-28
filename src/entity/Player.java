@@ -10,29 +10,22 @@ public class Player {
     public static Player getInstance() {
         return instance;
     }
+    private int hp;//血量
+    private int hunger;//饥饿
+    private int thirst;//口渴
+    private int fatigue;//疲惫
+    private int actionPoint;//行动点
+    private int day;//生存天数
+    private int baseAttack;//攻击
+    private int defense;//防御
 
-    // 生存属性
-    private int hp;
-    private int hunger;
-    private int thirst;
-    private int fatigue;
-
-    // 行动
-    private int actionPoint;
-    private int day;
-
-    // 战斗
-    private int baseAttack;
-    private int defense;
-
-    private String currentArea;
-    // 背包固定数组
-    private Item[] backpackArr;
+    private String currentArea; //所在的地区
+    private Item[] backpackArr; //背包
 
     // 灯塔碎片 上限20
-    private int lighthouseFragmentCount;
-    private int lighthouseProgress;
-    private static final int MAX_LIGHT_FRAGMENT = 20;
+    private int lighthouseFragmentCount;//已收集碎片数量
+    private int lighthouseProgress;// 建造进度（0~100%）
+    private static final int MAX_LIGHT_FRAGMENT = 20;//通关需要20块碎片
 
     private boolean isGameOver;
     private boolean isGameWin;
@@ -42,16 +35,15 @@ public class Player {
         hunger = 80;
         thirst = 80;
         fatigue = 20;
-
         actionPoint = 10;
         day = 1;
-
         baseAttack = 10;
         defense = 5;
         currentArea = "沙滩";
 
-        // 背包数组初始化，末尾参数ownCount=0
+        // 背包数组初始化，初始全部是0
         backpackArr = new Item[]{
+                //食物food（0~3）：new Item(名称,type,描述,图片,恢复类型,数值,初始数量0)
                 // 0 椰子 food
                 new Item("椰子", "food", "恢复饥饿", "/images/img_item/food/item_coconut.png", "hunger", 20, 0),
                 // 1 鱼 food 减疲惫
@@ -61,7 +53,7 @@ public class Player {
                 // 3 兔肉 food 回饥饿
                 new Item("兔肉", "food", "恢复饥饿", "/images/img_item/food/item_rabbit_meat.png", "hunger", 22, 0),
 
-                // 4 矿石 material
+                // 材料material（4~9）：new Item(名称,type,描述,图片,初始数量0)                        // 4 矿石 material
                 new Item("矿石", "material", "合成材料", "/images/img_item/material/item_ore.png", 0),
                 // 5 贝壳
                 new Item("贝壳", "material", "合成材料", "/images/img_item/material/item_shell.png", 0),
@@ -74,6 +66,7 @@ public class Player {
                 // 9 灯塔碎片
                 new Item("灯塔碎片", "material", "通关道具", "/images/img_item/tool/item_tower.png", 0),
 
+                // 工具tool（10~14）：new Item(名称,type,描述,图片,攻击加成,最大耐久,初始数量0
                 // 10 斧头 tool
                 new Item("斧头", "tool", "攻击+4", "/images/img_item/tool/item_axe.png", 4, 50, 0),
                 // 11 贝刃
@@ -112,7 +105,8 @@ public class Player {
         }
         actionPoint--;
         fatigue -= 10;
-        if (fatigue < 0) fatigue = 0;
+        if (fatigue < 0)
+            fatigue = 0;
         System.out.println("休息完毕，疲惫减少10，当前疲惫值：" + fatigue);
         checkGameOver();
     }
@@ -122,13 +116,11 @@ public class Player {
         if (isGameOver || isGameWin) return;
         day++;
         actionPoint = 10;
-        hunger = Math.max(0, hunger - 10);
-        thirst = Math.max(0, thirst - 5);
         System.out.println("===== 第 " + day + " 天 =====");
         checkGameOver();
     }
 
-    // 拾取灯塔碎片 上限20
+    /**拾取灯塔碎片 上限20
     public void pickLighthouseFragment() {
         if (isGameOver || isGameWin) return;
         if (lighthouseFragmentCount >= MAX_LIGHT_FRAGMENT) {
@@ -152,11 +144,11 @@ public class Player {
         lighthouseFragmentCount = lighthouseProgress / 5;
         System.out.println("灯塔建造进度提升，当前：" + lighthouseProgress + "%，碎片：" + lighthouseFragmentCount + "/" + MAX_LIGHT_FRAGMENT);
         checkGameOver();
-    }
+    }*/
 
-    // 攻击怪物（和Item getter统一命名）
+    // 攻击怪物
     public boolean attackMonster(Monster monster) {
-        int totalToolAtk = 0;
+        int totalToolAtk = 0;//
         for (Item item : backpackArr) {
             if (item.getOwnCount() > 0 && "tool".equals(item.getItemType())) {
                 totalToolAtk += item.getAttackBonus();
@@ -221,9 +213,9 @@ public class Player {
         Item target = backpackArr[idx];
         target.addCount(num);
         System.out.println("拾取成功：" + itemName + " x" + num);
-        if ("灯塔碎片".equals(itemName)) {
-            pickLighthouseFragment();
-        }
+        /**if ("灯塔碎片".equals(itemName)) {
+         * pickLighthouseFragment();
+        }*/
     }
 
     // 丢弃物品
