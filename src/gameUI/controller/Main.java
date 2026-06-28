@@ -33,7 +33,7 @@ public class Main {
     //初始化属性
     @FXML
     public void initialize(){
-        player.initPlayer2();
+        player.initPlayer();
         refreshUI();
     }
     // 刷新所有属性显示

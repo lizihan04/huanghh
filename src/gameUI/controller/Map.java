@@ -1,7 +1,6 @@
 package gameUI.controller;
 
-import com.survivalgame.service.ExploreManager;
-import entity.Player;
+import com.survivalgame.service.GameLogic;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.stage.Stage;
@@ -9,7 +8,7 @@ import java.io.IOException;
 
 public class Map {
     private gameUI.controller.Main main;
-    private ExploreManager explore = ExploreManager.getInstance();
+    private GameLogic explore = GameLogic.getInstance();
     public void setMainController(Main main) {
         this.main = main;
     }
@@ -43,9 +42,8 @@ public class Map {
     }
     //地图探索
 
-
     public void explore(){
-        explore.explore();
+        explore.randomEvent();
         main.refreshUI();
     }
 

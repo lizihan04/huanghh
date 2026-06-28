@@ -13,7 +13,7 @@
             <Image url="@../../../resources/images/img_map/map_bg_sea.png" />
          </image>
       </ImageView>
-      <Button fx:id="exploreBtn1" layoutX="275.0" layoutY="264.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="!" textFill="RED">
+      <Button fx:id="exploreBtn" layoutX="396.0" layoutY="197.0" mnemonicParsing="false" onAction="#explore" prefHeight="30.0" prefWidth="30.0" text="!" textFill="RED">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>

@@ -160,7 +160,7 @@
                            <image>
                               <Image url="@../../../resources/images/img_item/tool/item_stonesword.png" />
                            </image></ImageView>
-                        <Label fx:id="drik" text="Label" StackPane.alignment="BOTTOM_RIGHT" />
+                        <Label fx:id="dirk" text="Label" StackPane.alignment="BOTTOM_RIGHT" />
                      </children>
                   </StackPane>
                   <StackPane prefHeight="86.0" prefWidth="104.0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
