@@ -23,19 +23,19 @@ public class GameLogic {
     private final Random random = new Random();
     private static final int MAX_FRAGMENT = 20;
 
+
     /**
-     * 随机事件：4类分支
-     * 0=获得碎片 1=获得随机材料 2=遭遇怪物扣血 3=无事件
+     * 1. 沙滩Beach 专属随机事件
+     * 怪物：无任何怪物
+     * 材料：贝壳、椰子
+     * 事件分支：0碎片 / 1本地材料 / 2无怪物 / 3无事件
      */
-    public void randomEvent() {
-        if(gameEnd()){
-            return;
-        }
+    private void beachRandomEvent(){
         int eventType = random.nextInt(4);
         Item2[] backpack = player.getBackpackArr();
         switch (eventType){
             case 0:
-                // 事件1：拾取灯塔碎片
+                // 获得灯塔碎片
                 for(Item2 item : backpack){
                     if("灯塔碎片".equals(item.getItemName())){
                         item.setOwnCount(item.getOwnCount() + 1);
@@ -43,12 +43,11 @@ public class GameLogic {
                         break;
                     }
                 }
-                // 拾取物品后更新背包数量
                 bagUpDate();
                 break;
             case 1:
-                // 事件2：拾取随机基础材料
-                String[] matList = {"矿石","贝壳","石头","藤蔓","木头"};
+                // 沙滩专属材料
+                String[] matList = {"贝壳","椰子"};
                 String targetMat = matList[random.nextInt(matList.length)];
                 int addNum = random.nextInt(3) + 1;
                 for(Item2 item : backpack){
@@ -57,26 +56,141 @@ public class GameLogic {
                         break;
                     }
                 }
-                // 拾取物品后更新背包数量
                 bagUpDate();
                 break;
             case 2:
-                // 事件3：随机生成怪物，按怪物自身攻击值扣玩家血量
+                // 沙滩没有怪物，本分支无操作
+                break;
+            case 3:
+                // 无事件
+                break;
+        }
+    }
+
+    /**
+     * 2. 森林Forest 专属随机事件
+     * 怪物：野兔、野猪；材料：木头、藤蔓
+     */
+    private void forestRandomEvent(){
+        int eventType = random.nextInt(4);
+        Item2[] backpack = player.getBackpackArr();
+        switch (eventType){
+            case 0:
+                for(Item2 item : backpack){
+                    if("灯塔碎片".equals(item.getItemName())){
+                        item.setOwnCount(item.getOwnCount() + 1);
+                        player.setFragment(player.getFragment() + 1);
+                        break;
+                    }
+                }
+                bagUpDate();
+                break;
+            case 1:
+                String[] matList = {"木头","藤蔓"};
+                String targetMat = matList[random.nextInt(matList.length)];
+                int addNum = random.nextInt(3) + 1;
+                for(Item2 item : backpack){
+                    if(targetMat.equals(item.getItemName())){
+                        item.setOwnCount(item.getOwnCount() + addNum);
+                        break;
+                    }
+                }
+                bagUpDate();
+                break;
+            case 2:
                 Monster2 monster;
-                int monsterRand = random.nextInt(3);
-                if(monsterRand == 0){
-                    monster = new Hare2(); // 野兔伤害5
-                }else if(monsterRand == 1){
-                    monster = new Fish2(); // 鱼伤害5
+                if(random.nextBoolean()){
+                    monster = new Hare2();
                 }else{
-                    monster = new Boar2(); // 野猪伤害10
+                    monster = new Boar2();
                 }
                 int hurt = monster.getAttack();
                 int nowHp = player.getHp();
                 player.setHp(Math.max(0, nowHp - hurt));
                 break;
             case 3:
-                // 事件4：无任何事件
+                break;
+        }
+    }
+
+    /**
+     * 3. 岩石Rocky 专属随机事件
+     * 怪物：仅野猪；材料：石头、矿石
+     */
+    private void rockyRandomEvent(){
+        int eventType = random.nextInt(4);
+        Item2[] backpack = player.getBackpackArr();
+        switch (eventType){
+            case 0:
+                for(Item2 item : backpack){
+                    if("灯塔碎片".equals(item.getItemName())){
+                        item.setOwnCount(item.getOwnCount() + 1);
+                        player.setFragment(player.getFragment() + 1);
+                        break;
+                    }
+                }
+                bagUpDate();
+                break;
+            case 1:
+                String[] matList = {"石头","矿石"};
+                String targetMat = matList[random.nextInt(matList.length)];
+                int addNum = random.nextInt(3) + 1;
+                for(Item2 item : backpack){
+                    if(targetMat.equals(item.getItemName())){
+                        item.setOwnCount(item.getOwnCount() + addNum);
+                        break;
+                    }
+                }
+                bagUpDate();
+                break;
+            case 2:
+                Monster2 monster = new Boar2();
+                int hurt = monster.getAttack();
+                int nowHp = player.getHp();
+                player.setHp(Math.max(0, nowHp - hurt));
+                break;
+            case 3:
+                break;
+        }
+    }
+
+    /**
+     * 4. 海洋Sea 专属随机事件
+     * 怪物：仅鱼；材料：贝壳、鱼
+     */
+    private void seaRandomEvent(){
+        int eventType = random.nextInt(4);
+        Item2[] backpack = player.getBackpackArr();
+        switch (eventType){
+            case 0:
+                for(Item2 item : backpack){
+                    if("灯塔碎片".equals(item.getItemName())){
+                        item.setOwnCount(item.getOwnCount() + 1);
+                        player.setFragment(player.getFragment() + 1);
+                        break;
+                    }
+                }
+                bagUpDate();
+                break;
+            case 1:
+                String[] matList = {"贝壳","鱼"};
+                String targetMat = matList[random.nextInt(matList.length)];
+                int addNum = random.nextInt(3) + 1;
+                for(Item2 item : backpack){
+                    if(targetMat.equals(item.getItemName())){
+                        item.setOwnCount(item.getOwnCount() + addNum);
+                        break;
+                    }
+                }
+                bagUpDate();
+                break;
+            case 2:
+                Monster2 monster = new Fish2();
+                int hurt = monster.getAttack();
+                int nowHp = player.getHp();
+                player.setHp(Math.max(0, nowHp - hurt));
+                break;
+            case 3:
                 break;
         }
     }
@@ -111,8 +225,6 @@ public class GameLogic {
         if(gameEnd()){
             return;
         }
-        // 第一步：执行当日随机事件（包含物品拾取，内部自动调用bagUpDate）
-        randomEvent();
         // 仅恢复行动点，其他生存属性（天数、饥饿、口渴、疲惫）全部不改动
         player.setActionPoint(10);
         // 最后校正背包数据
