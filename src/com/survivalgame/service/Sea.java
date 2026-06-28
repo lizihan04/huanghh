@@ -28,12 +28,4 @@ public class Sea implements Terrain {
     public Monster createMonster() {
         return new TigerShark();
     }
-
-    @Override
-    public String getRestEffect(Player player) {
-        int oldFatigue = player.getFatigue();
-        int newFatigue = Math.max(0, oldFatigue - 5);
-        player.setFatigue(newFatigue);
-        return "在海边休息，疲惫-5（海风太大，难以入睡）";
-    }
 }

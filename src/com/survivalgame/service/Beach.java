@@ -32,15 +32,4 @@ public class Beach implements Terrain {
     public Monster createMonster() {
         return new Crab();
     }
-
-    @Override
-    public String getRestEffect(Player player) {
-        int oldFatigue = player.getFatigue();
-        int newFatigue = Math.max(0, oldFatigue - 20);
-        player.setFatigue(newFatigue);
-        int oldHp = player.getHp();
-        int newHp = Math.min(100, oldHp + 10);
-        player.setHp(newHp);
-        return "在沙滩休息，疲惫-20，血量+10";
-    }
 }

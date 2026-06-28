@@ -29,11 +29,5 @@ public class Forest implements Terrain {
         return new Monkey();
     }
 
-    @Override
-    public String getRestEffect(Player player) {
-        int oldFatigue = player.getFatigue();
-        int newFatigue = Math.max(0, oldFatigue - 10);
-        player.setFatigue(newFatigue);
-        return "在树林休息，疲惫-10";
-    }
+    // 删除 getRestEffect 方法
 }

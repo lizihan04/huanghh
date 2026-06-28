@@ -28,12 +28,4 @@ public class Rocky implements Terrain {
     public Monster createMonster() {
         return new BlueSheep();
     }
-
-    @Override
-    public String getRestEffect(Player player) {
-        int oldFatigue = player.getFatigue();
-        int newFatigue = Math.max(0, oldFatigue - 8);
-        player.setFatigue(newFatigue);
-        return "在岩石区休息，疲惫-8（夜晚太寒冷了）";
-    }
 }
