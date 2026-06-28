@@ -22,7 +22,7 @@ public class GameService {
     private SaveLoadManager saveLoadManager;
     private CraftingManager craftingManager;
     private ExploreManager exploreManager;
-    private RestManager restManager;
+    // 删除 RestManager
 
     // ===================== 初始化 =====================
     public void initGame() {
@@ -64,15 +64,24 @@ public class GameService {
         exploreManager.setRandom(random);
         exploreManager.setTerrains(terrains);
 
-        restManager = RestManager.getInstance();
-        restManager.setPlayer(player);
-        restManager.setTerrains(terrains);
+        // 删除 RestManager 初始化
     }
 
-    // ===================== 灯塔建造（保留在 GameService） =====================
+    // ===================== 灯塔建造 =====================
     public void buildLighthouse() {
         player.buildLighthouse();
         System.out.println("灯塔进度：" + player.getLighthouseProgress() + "%");
+        player.checkGameOver();
+    }
+
+    // ===================== 休息（直接调用 player.rest()） =====================
+    public void rest() {
+        if (player.getActionPoint() <= 0) {
+            System.out.println("行动力不足，自动进入下一天");
+            nextDay();
+            return;
+        }
+        player.rest();
         player.checkGameOver();
     }
 
@@ -105,9 +114,6 @@ public class GameService {
 
     // 探索
     public void explore() { exploreManager.explore(); }
-
-    // 休息
-    public void rest() { restManager.rest(); }
 
     // Getter
     public Player getPlayer() { return player; }

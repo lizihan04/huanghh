@@ -21,7 +21,7 @@ public class Rocky implements Terrain {
     @Override
     public Item createResource() {
         int count = 1 + random.nextInt(3);
-        return new Tool("石头", "material", "合成材料", "images/img_item/material/item_stone.png", count, 0, 0, 0);
+        return new Item("石头", "material", "合成材料", "images/img_item/material/item_stone.png", count);
     }
 
     @Override

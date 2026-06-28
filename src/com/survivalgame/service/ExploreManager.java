@@ -44,16 +44,14 @@ public class ExploreManager {
         // 5%概率获得灯塔碎片
         if (r < 0.05) {
             // 创建灯塔碎片
-            Clip fragment = new Clip("灯塔碎片", "fragment", "集齐20块可通关",
-                    "images/img_item/tool/item_tower.png", 1, 1);
-            player.addItem(fragment);
+            player.addItem("灯塔碎片", 1);
             System.out.println("✨ 在【" + player.getCurrentArea() + "】探索，发现了一块灯塔碎片！");
         } else if (r < 0.45) {
             // 40%概率获得物资
             Item resource = terrain.createResource();
             if (resource != null) {
-                player.addItem(resource);
-                System.out.println("在【" + player.getCurrentArea() + "】探索，发现 " + resource.getName() + " x" + resource.getCount());
+                player.addItem(resource.getItemName(), resource.getOwnCount());
+                System.out.println("在【" + player.getCurrentArea() + "】探索，发现 " + resource.getItemName() + " x" + resource.getOwnCount());
             } else {
                 System.out.println("探索一番，什么也没发现");
             }

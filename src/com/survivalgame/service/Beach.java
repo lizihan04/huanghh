@@ -21,9 +21,10 @@ public class Beach implements Terrain {
     @Override
     public Item createResource() {
         if (random.nextBoolean()) {
-            return new Tool("树枝", "material", "合成材料", "images/img_item/material/item_stick.png", 1 + random.nextInt(2), 0, 0, 0);
+            return new Item("树枝", "material", "合成材料", "images/img_item/material/item_stick.png", 1 + random.nextInt(2));
         } else {
-            return new Food("椰子", "food", "解渴", "images/img_item/food/item_coconut.png", 1, "thirst", 20);
+            // 椰子：食物构造器 Item(name, type, desc, img, recoverType, recoverValue, ownCount)
+            return new Item("椰子", "food", "解渴", "images/img_item/food/item_coconut.png", "thirst", 20, 1);
         }
     }
 

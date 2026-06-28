@@ -1,4 +1,4 @@
-package com.survivalgame.service;
+/*package com.survivalgame.service;
 
 import entity.*;
 import java.util.*;
@@ -38,4 +38,4 @@ public class RestManager {
         System.out.println(effect);
         player.checkGameOver();
     }
-}
+}*/

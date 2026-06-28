@@ -31,9 +31,6 @@ public class CraftingManager {
         return RecipeManagement.RECIPES.get(recipeName);
     }
 
-    /**
-     * 执行合成
-     */
     public boolean craftItem(String recipeName) {
         if (!RecipeManagement.RECIPES.containsKey(recipeName)) {
             System.out.println("未知配方：" + recipeName);
@@ -42,18 +39,18 @@ public class CraftingManager {
 
         Map<String, Integer> required = RecipeManagement.RECIPES.get(recipeName);
 
-        // 统一循环校验所有材料（删除重复if，通用逻辑）
-        for(Map.Entry<String,Integer> entry : required.entrySet()){
+        // 统一循环校验所有材料
+        for (Map.Entry<String, Integer> entry : required.entrySet()) {
             String matName = entry.getKey();
             int need = entry.getValue();
             int have = countMaterialInBackpack(matName);
-            if(have < need){
+            if (have < need) {
                 System.out.println("材料不足：" + matName + " 需要 " + need + " 个，当前有 " + have + " 个");
                 return false;
             }
         }
 
-        // 扣除对应材料数量（数组固定下标，只减少ownCount，不置空对象）
+        // 扣除材料
         for (Map.Entry<String, Integer> entry : required.entrySet()) {
             String materialName = entry.getKey();
             int deductCount = entry.getValue();
@@ -61,7 +58,7 @@ public class CraftingManager {
             int remainDeduct = deductCount;
 
             for (Item item : backpack) {
-                if(remainDeduct <= 0) break;
+                if (remainDeduct <= 0) break;
                 if (item != null
                         && materialName.equals(item.getItemName())
                         && "material".equals(item.getItemType())) {
@@ -77,13 +74,12 @@ public class CraftingManager {
             }
         }
 
-        // 生成产物，调用player.addItem(名称,数量)
+        // 生成产物
         if ("灯塔碎片".equals(recipeName)) {
             player.addItem("灯塔碎片", 1);
             System.out.println("合成成功！获得 灯塔碎片");
             return true;
         } else {
-            // 根据配方名创建对应工具Item，固定数量1
             String toolName = recipeName;
             Item toolItem = createToolItemByName(toolName);
             if (toolItem != null) {
@@ -97,9 +93,6 @@ public class CraftingManager {
         }
     }
 
-    /**
-     * 统计背包内指定材料总数量
-     */
     private int countMaterialInBackpack(String materialName) {
         Item[] backpack = player.getBackpack();
         int total = 0;
@@ -113,13 +106,9 @@ public class CraftingManager {
         return total;
     }
 
-    /**
-     * 创建标准工具Item对象（无Tool子类，统一Item三类构造器）
-     */
     private Item createToolItemByName(String name) {
         switch (name) {
             case "贝刃":
-                // Item(String name, type, desc, img, attackBonus, maxDur, ownCount)
                 return new Item("贝刃", "tool", "攻击+3，无采集加成",
                         "/images/img_item/tool/item_blade.png", 3, 30, 1);
             case "石刃":
