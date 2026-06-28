@@ -19,6 +19,9 @@ public class gameLogic2 {
     //工作台制作物品（根据配方类recipe）
     public void makeItem(){}
 
+    //下一天
+    public void nextDay(){}
+
     //判断游戏进程（布尔值的赋值）
     public void gameEnd(){}
 }
