@@ -27,6 +27,8 @@ public class Player2 {
 
     //玩家方法（总）
     //()
+    //初始化
+    public void initPlayer2(){}
     //休息
     public void rest(){}
     public void eat(){}
@@ -34,4 +36,5 @@ public class Player2 {
     public void next_day(){}
     //工作台
     public void make(){}
+    //
 }

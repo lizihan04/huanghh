@@ -1,6 +1,6 @@
 package gameUI.controller;
 
-import entity.Player;
+import entity.Player2;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -28,12 +28,12 @@ public class Main {
     @FXML
     private Label actionPointLabel;
 
-    private Player player = Player.getInstance();
+    private Player2 player = Player2.getInstance();
 
     //初始化属性
     @FXML
     public void initialize(){
-        player.initPlayer();
+        player.initPlayer2();
         refreshUI();
     }
     // 刷新所有属性显示
