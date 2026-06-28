@@ -29,13 +29,14 @@ public class Bag {
 
     @FXML
     public void initialize(){
-        main.refreshUI();
+        System.out.println("Bag控制器初始化完成");
     }
 
     public void setMainController(Main main) {
         this.main = main;
         this.player = Player2.getInstance();  // 在这里拿才安全！
         this.backpackArr = player.getBackpackArr();
+        refreshUI();
     }
 
     public void refreshUI() {
@@ -59,5 +60,7 @@ public class Bag {
         hammer.setText(String.valueOf(backpackArr[12].getOwnCount()));
         club.setText(String.valueOf(backpackArr[13].getOwnCount()));
         dirk.setText(String.valueOf(backpackArr[14].getOwnCount()));
+
+        main.refreshUI();
     }
 }

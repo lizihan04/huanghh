@@ -35,6 +35,8 @@ public class GameLogic {
         player.setActionPoint(player.getActionPoint() - 1);
         //每次探索 疲惫＋5
         player.setFatigue(player.getFatigue()+5);
+        player.setHunger(player.getHunger()+2);
+        player.setThirst(player.getThirst()+2);
 
         int eventType = random.nextInt(4);
         Item2[] backpack = player.getBackpackArr();
@@ -49,7 +51,7 @@ public class GameLogic {
                     }
                 }
                 bagUpDate();
-                return "恭喜！你找到了1块灯塔碎片，离胜利又近了一步!";
+                return "恭喜！你找到了1块灯塔碎片!";
             case 1:
                 // 沙滩专属材料
                 String[] matList = {"贝壳","椰子"};
@@ -82,6 +84,8 @@ public class GameLogic {
         player.setActionPoint(player.getActionPoint() - 1);
         //每次探索 疲惫＋5
         player.setFatigue(player.getFatigue()+5);
+        player.setHunger(player.getHunger()+2);
+        player.setThirst(player.getThirst()+2);
 
         int eventType = random.nextInt(4);
         Item2[] backpack = player.getBackpackArr();
@@ -95,7 +99,7 @@ public class GameLogic {
                     }
                 }
                 bagUpDate();
-                return "恭喜！你找到了1块灯塔碎片，离胜利又近了一步!";
+                return "恭喜！你找到了1块灯塔碎片!";
             case 1:
                 String[] matList = {"木头","藤蔓"};
                 String targetMat = matList[random.nextInt(matList.length)];
@@ -134,6 +138,8 @@ public class GameLogic {
         player.setActionPoint(player.getActionPoint() - 1);
         //每次探索 疲惫＋5
         player.setFatigue(player.getFatigue()+5);
+        player.setHunger(player.getHunger()+2);
+        player.setThirst(player.getThirst()+2);
 
         int eventType = random.nextInt(4);
         Item2[] backpack = player.getBackpackArr();
@@ -147,7 +153,7 @@ public class GameLogic {
                     }
                 }
                 bagUpDate();
-                return "恭喜！你找到了1块灯塔碎片，离胜利又近了一步!";
+                return "恭喜！你找到了1块灯塔碎片!";
             case 1:
                 String[] matList = {"石头","矿石"};
                 String targetMat = matList[random.nextInt(matList.length)];
@@ -181,6 +187,8 @@ public class GameLogic {
         player.setActionPoint(player.getActionPoint() - 1);
         //每次探索 疲惫＋5
         player.setFatigue(player.getFatigue()+5);
+        player.setHunger(player.getHunger()+2);
+        player.setThirst(player.getThirst()+2);
 
         int eventType = random.nextInt(4);
         Item2[] backpack = player.getBackpackArr();
@@ -194,7 +202,7 @@ public class GameLogic {
                     }
                 }
                 bagUpDate();
-                return "恭喜！你找到了1块灯塔碎片，离胜利又近了一步!";
+                return "恭喜！你找到了1块灯塔碎片!";
             case 1:
                 String[] matList = {"贝壳","鱼"};
                 String targetMat = matList[random.nextInt(matList.length)];

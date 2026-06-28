@@ -165,7 +165,7 @@ public class Player2 {
             return;
         }
         actionPoint--;
-        fatigue = Math.max(0, fatigue - 10);
+        fatigue = Math.max(0, fatigue - 5);
     }
 
     // 下一天：时间流逝，饥饿、口渴负面值上涨（变大）

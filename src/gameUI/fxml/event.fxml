@@ -4,15 +4,14 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
 
-
 <AnchorPane prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gameUI.controller.Event">
    <children>
-      <StackPane layoutY="70.0" prefHeight="25.0" prefWidth="203.0">
+      <StackPane layoutX="2.0" layoutY="47.0" prefHeight="50.0" prefWidth="200.0">
          <children>
             <Label fx:id="words1" />
          </children>
       </StackPane>
-      <StackPane layoutX="3.0" layoutY="101.0">
+      <StackPane layoutX="3.0" layoutY="100.0" prefHeight="50.0" prefWidth="200.0">
          <children>
             <Label fx:id="words2" alignment="CENTER" prefHeight="10.0" prefWidth="200.0" />
          </children>

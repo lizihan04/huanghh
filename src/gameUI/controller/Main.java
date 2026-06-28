@@ -149,6 +149,7 @@ public class Main {
         chooseStage.setTitle("下一天");
         chooseStage.initModality(Modality.APPLICATION_MODAL); //单弹窗操作
         chooseStage.setResizable(false);
+        nextday.setCurrentStage(chooseStage);
         chooseStage.showAndWait();
     }
 

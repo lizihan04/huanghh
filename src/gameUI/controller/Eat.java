@@ -1,14 +1,7 @@
 package gameUI.controller;
 
-import entity.Food2;
-import entity.Item2;
 import entity.Player2;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 public class Eat {
@@ -24,23 +17,40 @@ public class Eat {
         this.currentStage = currentStage;
     }
 
+    // 通用方法：进食后刷新+关闭窗口
+    private void afterEat() {
+        if (main != null) {
+            main.refreshUI(); // 刷新主界面属性
+        }
+        if (currentStage != null) {
+            currentStage.close(); // 关闭进食窗口
+        }
+    }
 
     // 确认进食按钮触发的方法
     @FXML
     public void eatCoco() {
-        player.eatCoco();
+        if(player.getActionPoint() > 0)
+            player.eatCoco();
+        afterEat();
     }
     @FXML
     public void eatFish() {
-        player.eatFish();
+        if(player.getActionPoint() > 0)
+            player.eatFish();
+        afterEat();
     }
     @FXML
     public void eatPig() {
-       player.eatPork();
+        if(player.getActionPoint() > 0)
+            player.eatPork();
+        afterEat();
     }
     @FXML
     public void eatRabbit() {
-        player.eatRabbitMeat();
+        if(player.getActionPoint() > 0)
+            player.eatRabbitMeat();
+        afterEat();
     }
 
 }
