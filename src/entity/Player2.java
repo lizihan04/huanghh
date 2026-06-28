@@ -72,7 +72,7 @@ public class Player2 {
     }
 
     // 统一休息入口：1=吃东西，2=原地休息，无独立eat方法
-    public void eatOrRest(int choose, String foodName) {
+    public void eatOrRest(int choose) {
         if (GameLogic.getInstance().gameEnd()) {
             return;
         }
@@ -80,50 +80,86 @@ public class Player2 {
             return;
         }
         if (choose == 1) {
-            int targetIndex = getItemIndexByName(foodName);
-            if (targetIndex == -1) {
-                return;
-            }
-            Item2 targetItem = backpackArr[targetIndex];
-            if (!(targetItem instanceof Food2)) {
-                return;
-            }
-            Food2 foodObj = (Food2) targetItem;
-            if (foodObj.getOwnCount() <= 0) {
-                return;
-            }
-
-            String recoverType = foodObj.getRecoverType();
-            int val = foodObj.getRecoverValue();
-            switch (recoverType) {
-                case "hp":
-                    // 血量：正向，吃东西增加，上限100
-                    hp = Math.min(100, hp + val);
-                    break;
-                case "hunger":
-                    // 饥饿：负面，吃东西减少，最低0
-                    hunger = Math.max(0, hunger - val);
-                    break;
-                case "thirst":
-                    // 口渴：负面，吃东西减少，最低0
-                    thirst = Math.max(0, thirst - val);
-                    break;
-                case "fatigue":
-                    // 疲惫：负面，吃东西减少，最低0
-                    fatigue = Math.max(0, fatigue - val);
-                    break;
-                default:
-                    return;
-            }
-            // 消耗1个食物
-            foodObj.setOwnCount(foodObj.getOwnCount() - 1);
-            actionPoint--;
+            // 进入食物选择界面，UI展示4个食物按钮，分别调用下面4个进食方法
+            openFoodSelectPage();
         } else if (choose == 2) {
+            // 原地休息，无弹窗
             rest();
         }
     }
 
-    // 单纯原地休息：只减少疲惫
+    // 打开食物选择弹窗/页面（UI渲染层，只做页面跳转）
+    private void openFoodSelectPage() {
+        // UI页面渲染四个按钮：吃椰子、吃兔肉、吃鱼、吃猪肉
+        // 按钮分别绑定 eatCoco() / eatRabbitMeat() / eatFish() / eatPork()
+    }
+
+    // ========== 4个独立进食方法，分别对应四种食物 ==========
+    // 1. 吃椰子 Coco，减少口渴值
+    public void eatCoco() {
+        eatSingleFood("椰子");
+    }
+
+    // 2. 吃兔肉，减少饥饿值
+    public void eatRabbitMeat() {
+        eatSingleFood("兔肉");
+    }
+
+    // 3. 吃鱼，减少疲惫值
+    public void eatFish() {
+        eatSingleFood("鱼");
+    }
+
+    // 4. 吃猪肉，增加血量
+    public void eatPork() {
+        eatSingleFood("猪肉");
+    }
+
+    // 私有通用进食底层方法，被上面4个方法复用
+    private void eatSingleFood(String foodName) {
+        if (GameLogic.getInstance().gameEnd()) {
+            return;
+        }
+        if (actionPoint <= 0) {
+            return;
+        }
+        int targetIndex = getItemIndexByName(foodName);
+        if (targetIndex == -1) {
+            return;
+        }
+        Item2 targetItem = backpackArr[targetIndex];
+        if (!(targetItem instanceof Food2)) {
+            return;
+        }
+        Food2 foodObj = (Food2) targetItem;
+        if (foodObj.getOwnCount() <= 0) {
+            return;
+        }
+
+        String recoverType = foodObj.getRecoverType();
+        int val = foodObj.getRecoverValue();
+        switch (recoverType) {
+            case "hp":
+                hp = Math.min(100, hp + val);
+                break;
+            case "hunger":
+                hunger = Math.max(0, hunger - val);
+                break;
+            case "thirst":
+                thirst = Math.max(0, thirst - val);
+                break;
+            case "fatigue":
+                fatigue = Math.max(0, fatigue - val);
+                break;
+            default:
+                return;
+        }
+        // 消耗一个食物
+        foodObj.setOwnCount(foodObj.getOwnCount() - 1);
+        actionPoint--;
+    }
+
+    // 单纯原地休息
     public void rest() {
         if (GameLogic.getInstance().gameEnd()) {
             return;
