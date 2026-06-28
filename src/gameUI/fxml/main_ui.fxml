@@ -26,7 +26,7 @@
                         </ImageView>
                      </children>
                   </StackPane>
-                  <Label layoutY="20.0" prefHeight="30.0" prefWidth="120.0" text="生命值" textAlignment="CENTER" />
+                  <Label fx:id="hpLabel" layoutY="20.0" prefHeight="30.0" prefWidth="120.0" text="生命值" textAlignment="CENTER" />
                   <StackPane>
                      <children>
                         <ImageView fitHeight="70.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
@@ -36,7 +36,7 @@
                         </ImageView>
                      </children>
                   </StackPane>
-                  <Label prefHeight="30.0" prefWidth="120.0" text="饥饿值" textAlignment="CENTER" />
+                  <Label fx:id="hungerLabel" prefHeight="30.0" prefWidth="120.0" text="饥饿值" textAlignment="CENTER" />
                   <StackPane>
                      <children>
                         <ImageView fitHeight="70.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
@@ -46,7 +46,7 @@
                         </ImageView>
                      </children>
                   </StackPane>
-                  <Label prefHeight="30.0" prefWidth="120.0" text="饥渴值" />
+                  <Label fx:id="thirstLabel" prefHeight="30.0" prefWidth="120.0" text="饥渴值" />
                   <StackPane>
                      <children>
                         <ImageView fitHeight="70.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
@@ -56,7 +56,7 @@
                         </ImageView>
                      </children>
                   </StackPane>
-                  <Label prefHeight="30.0" prefWidth="120.0" text="疲惫值" />
+                  <Label fx:id="fatigueLabel" prefHeight="30.0" prefWidth="120.0" text="疲惫值" />
                   <StackPane>
                      <children>
                         <ImageView fitHeight="80.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
@@ -66,7 +66,7 @@
                         </ImageView>
                      </children>
                   </StackPane>
-                  <Label prefHeight="30.0" prefWidth="120.0" text="行动点" />
+                  <Label fx:id="actionPointLabel" prefHeight="30.0" prefWidth="120.0" text="行动点" />
                </children>
             </VBox>
          </left>
