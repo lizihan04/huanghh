@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="500.0" prefWidth="871.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gameUI.controller.Map">
    <children>
@@ -11,5 +13,10 @@
             <Image url="@../../../resources/images/img_map/map_bg_sea.png" />
          </image>
       </ImageView>
+      <Button fx:id="exploreBtn1" layoutX="275.0" layoutY="264.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="!" textFill="RED">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

@@ -14,7 +14,7 @@ public class ExploreManager {
         return instance;
     }
 
-    private Player player;
+    private Player player = Player.getInstance();;
     private Random random;
     private Map<String, Terrain> terrains;
 

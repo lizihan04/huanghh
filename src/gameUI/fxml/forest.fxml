@@ -13,27 +13,32 @@
             <Image url="@../../../resources/images/img_map/map_bg_wood.png" />
          </image>
       </ImageView>
-      <Button fx:id="exploreBtn01" layoutX="580.0" layoutY="82.0" mnemonicParsing="false" onAction="#explore" prefHeight="30.0" prefWidth="30.0" text="!" textFill="RED">
+      <Button fx:id="exploreBtn1" layoutX="562.0" layoutY="53.0" mnemonicParsing="false" onAction="#explore" prefHeight="30.0" prefWidth="30.0" text="!" textFill="RED">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Button>
-      <Button fx:id="exploreBtn011" layoutX="294.0" layoutY="401.0" mnemonicParsing="false" onAction="#explore" prefHeight="30.0" prefWidth="30.0" text="!" textFill="RED">
+      <Button fx:id="exploreBtn2" layoutX="280.0" layoutY="378.0" mnemonicParsing="false" onAction="#explore" prefHeight="30.0" prefWidth="30.0" text="!" textFill="RED">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Button>
-      <Button fx:id="exploreBtn012" layoutX="395.0" layoutY="297.0" mnemonicParsing="false" onAction="#explore" prefHeight="30.0" prefWidth="30.0" text="!" textFill="RED">
+      <Button fx:id="exploreBtn3" layoutX="395.0" layoutY="297.0" mnemonicParsing="false" onAction="#explore" prefHeight="30.0" prefWidth="30.0" text="!" textFill="RED">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Button>
-      <Button fx:id="exploreBtn013" layoutX="207.0" layoutY="194.0" mnemonicParsing="false" onAction="#explore" prefHeight="30.0" prefWidth="30.0" text="!" textFill="RED">
+      <Button fx:id="exploreBtn4" layoutX="207.0" layoutY="194.0" mnemonicParsing="false" onAction="#explore" prefHeight="30.0" prefWidth="30.0" text="!" textFill="RED">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Button>
-      <Button fx:id="exploreBtn014" layoutX="623.0" layoutY="282.0" mnemonicParsing="false" onAction="#explore" prefHeight="30.0" prefWidth="30.0" text="!" textFill="RED">
+      <Button fx:id="exploreBtn5" layoutX="663.0" layoutY="327.0" mnemonicParsing="false" onAction="#explore" prefHeight="30.0" prefWidth="30.0" text="!" textFill="RED">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="exploreBtn6" layoutX="494.0" layoutY="179.0" mnemonicParsing="false" onAction="#explore" prefHeight="30.0" prefWidth="30.0" text="!" textFill="RED">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>

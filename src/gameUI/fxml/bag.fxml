@@ -34,7 +34,7 @@
                            <image>
                               <Image url="@../../../resources/images/img_item/food/item_coconut.png" />
                            </image></ImageView>
-                        <Label text="Label" StackPane.alignment="BOTTOM_RIGHT" />
+                        <Label fx:id="coco" text="Label" StackPane.alignment="BOTTOM_RIGHT" />
                      </children>
                   </StackPane>
                   <StackPane prefHeight="86.0" prefWidth="104.0" GridPane.columnIndex="1">
@@ -43,7 +43,7 @@
                            <image>
                               <Image url="@../../../resources/images/img_item/food/item_fish.png" />
                            </image></ImageView>
-                        <Label text="Label" StackPane.alignment="BOTTOM_RIGHT" />
+                        <Label fx:id="fish" text="Label" StackPane.alignment="BOTTOM_RIGHT" />
                      </children>
                   </StackPane>
                   <StackPane prefHeight="86.0" prefWidth="104.0" GridPane.columnIndex="2">
@@ -52,7 +52,7 @@
                            <image>
                               <Image url="@../../../resources/images/img_item/food/item_pork.png" />
                            </image></ImageView>
-                        <Label text="Label" StackPane.alignment="BOTTOM_RIGHT" />
+                        <Label fx:id="pig" text="Label" StackPane.alignment="BOTTOM_RIGHT" />
                      </children>
                   </StackPane>
                   <StackPane prefHeight="86.0" prefWidth="104.0" GridPane.columnIndex="3">
@@ -61,7 +61,7 @@
                            <image>
                               <Image url="@../../../resources/images/img_item/food/item_rabbit_meat.png" />
                            </image></ImageView>
-                        <Label text="Label" StackPane.alignment="BOTTOM_RIGHT" />
+                        <Label fx:id="rabbit" text="Label" StackPane.alignment="BOTTOM_RIGHT" />
                      </children>
                   </StackPane>
                   <StackPane prefHeight="86.0" prefWidth="104.0" GridPane.rowIndex="1">
@@ -70,7 +70,7 @@
                            <image>
                               <Image url="@../../../resources/images/img_item/material/item_ore.png" />
                            </image></ImageView>
-                        <Label text="Label" StackPane.alignment="BOTTOM_RIGHT" />
+                        <Label fx:id="mineral" text="Label" StackPane.alignment="BOTTOM_RIGHT" />
                      </children>
                   </StackPane>
                   <StackPane prefHeight="86.0" prefWidth="104.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
@@ -79,7 +79,7 @@
                            <image>
                               <Image url="@../../../resources/images/img_item/material/item_shell.png" />
                            </image></ImageView>
-                        <Label text="Label" StackPane.alignment="BOTTOM_RIGHT" />
+                        <Label fx:id="shell" text="Label" StackPane.alignment="BOTTOM_RIGHT" />
                      </children>
                   </StackPane>
                   <StackPane prefHeight="86.0" prefWidth="104.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
@@ -88,7 +88,7 @@
                            <image>
                               <Image url="@../../../resources/images/img_item/material/item_stone.png" />
                            </image></ImageView>
-                        <Label text="Label" StackPane.alignment="BOTTOM_RIGHT" />
+                        <Label fx:id="stone" text="Label" StackPane.alignment="BOTTOM_RIGHT" />
                      </children>
                   </StackPane>
                   <StackPane prefHeight="86.0" prefWidth="104.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
@@ -97,7 +97,7 @@
                            <image>
                               <Image url="@../../../resources/images/img_item/material/item_vine.png" />
                            </image></ImageView>
-                        <Label text="Label" StackPane.alignment="BOTTOM_RIGHT" />
+                        <Label fx:id="vine" text="Label" StackPane.alignment="BOTTOM_RIGHT" />
                      </children>
                   </StackPane>
                   <StackPane prefHeight="86.0" prefWidth="104.0" GridPane.rowIndex="2">
@@ -106,7 +106,7 @@
                            <image>
                               <Image url="@../../../resources/images/img_item/material/item_wood.png" />
                            </image></ImageView>
-                        <Label text="Label" StackPane.alignment="BOTTOM_RIGHT" />
+                        <Label fx:id="wood" text="Label" StackPane.alignment="BOTTOM_RIGHT" />
                      </children>
                   </StackPane>
                   <StackPane prefHeight="86.0" prefWidth="104.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
@@ -115,7 +115,7 @@
                            <image>
                               <Image url="@../../../resources/images/img_item/tool/item_tower.png" />
                            </image></ImageView>
-                        <Label text="Label" StackPane.alignment="BOTTOM_RIGHT" />
+                        <Label fx:id="debris" text="Label" StackPane.alignment="BOTTOM_RIGHT" />
                      </children>
                   </StackPane>
                   <StackPane prefHeight="86.0" prefWidth="104.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
@@ -124,7 +124,7 @@
                            <image>
                               <Image url="@../../../resources/images/img_item/tool/item_axe.png" />
                            </image></ImageView>
-                        <Label text="Label" StackPane.alignment="BOTTOM_RIGHT" />
+                        <Label fx:id="axe" text="Label" StackPane.alignment="BOTTOM_RIGHT" />
                      </children>
                   </StackPane>
                   <StackPane prefHeight="86.0" prefWidth="104.0" GridPane.columnIndex="3" GridPane.rowIndex="2">
@@ -133,7 +133,7 @@
                            <image>
                               <Image url="@../../../resources/images/img_item/tool/item_blade.png" />
                            </image></ImageView>
-                        <Label text="Label" StackPane.alignment="BOTTOM_RIGHT" />
+                        <Label fx:id="shell_axe" text="Label" StackPane.alignment="BOTTOM_RIGHT" />
                      </children>
                   </StackPane>
                   <StackPane prefHeight="86.0" prefWidth="104.0" GridPane.rowIndex="3">
@@ -142,7 +142,7 @@
                            <image>
                               <Image url="@../../../resources/images/img_item/tool/item_hammer.png" />
                            </image></ImageView>
-                        <Label text="Label" StackPane.alignment="BOTTOM_RIGHT" />
+                        <Label fx:id="hammer" text="Label" StackPane.alignment="BOTTOM_RIGHT" />
                      </children>
                   </StackPane>
                   <StackPane prefHeight="86.0" prefWidth="104.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
@@ -151,7 +151,7 @@
                            <image>
                               <Image url="@../../../resources/images/img_item/tool/item_stick.png" />
                            </image></ImageView>
-                        <Label text="Label" StackPane.alignment="BOTTOM_RIGHT" />
+                        <Label fx:id="club" text="Label" StackPane.alignment="BOTTOM_RIGHT" />
                      </children>
                   </StackPane>
                   <StackPane prefHeight="86.0" prefWidth="104.0" GridPane.columnIndex="2" GridPane.rowIndex="3">
@@ -160,7 +160,7 @@
                            <image>
                               <Image url="@../../../resources/images/img_item/tool/item_stonesword.png" />
                            </image></ImageView>
-                        <Label text="Label" StackPane.alignment="BOTTOM_RIGHT" />
+                        <Label fx:id="drik" text="Label" StackPane.alignment="BOTTOM_RIGHT" />
                      </children>
                   </StackPane>
                   <StackPane prefHeight="86.0" prefWidth="104.0" GridPane.columnIndex="3" GridPane.rowIndex="3" />

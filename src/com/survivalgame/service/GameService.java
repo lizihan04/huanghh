@@ -60,7 +60,7 @@ public class GameService {
         craftingManager.setPlayer(player);
 
         exploreManager = ExploreManager.getInstance();
-        exploreManager.setPlayer(player);
+//        exploreManager.setPlayer(player);
         exploreManager.setRandom(random);
         exploreManager.setTerrains(terrains);
 
@@ -68,11 +68,11 @@ public class GameService {
     }
 
     // ===================== 灯塔建造 =====================
-    public void buildLighthouse() {
-        player.buildLighthouse();
-        System.out.println("灯塔进度：" + player.getLighthouseProgress() + "%");
-        player.checkGameOver();
-    }
+//    public void buildLighthouse() {
+//        player.buildLighthouse();
+//        System.out.println("灯塔进度：" + player.getLighthouseProgress() + "%");
+//        player.checkGameOver();
+//    }
 
     // ===================== 休息（直接调用 player.rest()） =====================
     public void rest() {

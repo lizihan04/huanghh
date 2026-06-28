@@ -81,6 +81,8 @@ public class Main {
         chooseStage.initModality(Modality.APPLICATION_MODAL); //单弹窗操作
         chooseStage.setResizable(false);
         chooseStage.showAndWait();
+        //属性改变
+
     }
     //地图选择器
     @FXML
@@ -155,4 +157,5 @@ public class Main {
         chooseStage.setResizable(false);
         chooseStage.showAndWait();
     }
+
 }
