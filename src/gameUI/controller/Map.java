@@ -42,9 +42,9 @@ public class Map {
     }
     //地图探索
 
-    public void explore(){
-        explore.randomEvent();
-        main.refreshUI();
-    }
+//    public void explore(){
+//        explore.randomEvent();
+//        main.refreshUI();
+//    }
 
 }

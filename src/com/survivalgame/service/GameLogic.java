@@ -30,7 +30,12 @@ public class GameLogic {
      * 材料：贝壳、椰子
      * 事件分支：0碎片 / 1本地材料 / 2无怪物 / 3无事件
      */
-    private void beachRandomEvent(){
+    public String beachRandomEvent(){
+        // 扣减1点行动点（可自定义数值）
+        player.setActionPoint(player.getActionPoint() - 1);
+        //每次探索 疲惫＋5
+        player.setFatigue(player.getFatigue()+5);
+
         int eventType = random.nextInt(4);
         Item2[] backpack = player.getBackpackArr();
         switch (eventType){
@@ -44,7 +49,7 @@ public class GameLogic {
                     }
                 }
                 bagUpDate();
-                break;
+                return "恭喜！你找到了1块灯塔碎片，离胜利又近了一步!";
             case 1:
                 // 沙滩专属材料
                 String[] matList = {"贝壳","椰子"};
@@ -57,21 +62,27 @@ public class GameLogic {
                     }
                 }
                 bagUpDate();
-                break;
+                return "恭喜！" + targetMat + "+" + addNum;
             case 2:
                 // 沙滩没有怪物，本分支无操作
-                break;
+                return "无事发生！";
             case 3:
                 // 无事件
-                break;
+                return "无事发生!";
         }
+        return "无事发生!";
     }
 
     /**
      * 2. 森林Forest 专属随机事件
      * 怪物：野兔、野猪；材料：木头、藤蔓
      */
-    private void forestRandomEvent(){
+    public String forestRandomEvent(){
+        // 扣减1点行动点（可自定义数值）
+        player.setActionPoint(player.getActionPoint() - 1);
+        //每次探索 疲惫＋5
+        player.setFatigue(player.getFatigue()+5);
+
         int eventType = random.nextInt(4);
         Item2[] backpack = player.getBackpackArr();
         switch (eventType){
@@ -84,7 +95,7 @@ public class GameLogic {
                     }
                 }
                 bagUpDate();
-                break;
+                return "恭喜！你找到了1块灯塔碎片，离胜利又近了一步!";
             case 1:
                 String[] matList = {"木头","藤蔓"};
                 String targetMat = matList[random.nextInt(matList.length)];
@@ -96,7 +107,7 @@ public class GameLogic {
                     }
                 }
                 bagUpDate();
-                break;
+                return "恭喜！" + targetMat + "+" + addNum;
             case 2:
                 Monster2 monster;
                 if(random.nextBoolean()){
@@ -107,17 +118,23 @@ public class GameLogic {
                 int hurt = monster.getAttack();
                 int nowHp = player.getHp();
                 player.setHp(Math.max(0, nowHp - hurt));
-                break;
+                return "遇到怪物攻击！hp -" + hurt;
             case 3:
-                break;
+                return "无事发生!";
         }
+        return "无事发生!";
     }
 
     /**
      * 3. 岩石Rocky 专属随机事件
      * 怪物：仅野猪；材料：石头、矿石
      */
-    private void rockyRandomEvent(){
+    public String rockyRandomEvent(){
+        // 扣减1点行动点（可自定义数值）
+        player.setActionPoint(player.getActionPoint() - 1);
+        //每次探索 疲惫＋5
+        player.setFatigue(player.getFatigue()+5);
+
         int eventType = random.nextInt(4);
         Item2[] backpack = player.getBackpackArr();
         switch (eventType){
@@ -130,7 +147,7 @@ public class GameLogic {
                     }
                 }
                 bagUpDate();
-                break;
+                return "恭喜！你找到了1块灯塔碎片，离胜利又近了一步!";
             case 1:
                 String[] matList = {"石头","矿石"};
                 String targetMat = matList[random.nextInt(matList.length)];
@@ -142,23 +159,29 @@ public class GameLogic {
                     }
                 }
                 bagUpDate();
-                break;
+                return "恭喜！" + targetMat + "+" + addNum;
             case 2:
                 Monster2 monster = new Boar2();
                 int hurt = monster.getAttack();
                 int nowHp = player.getHp();
                 player.setHp(Math.max(0, nowHp - hurt));
-                break;
+                return "遇到怪物攻击！hp -" + hurt;
             case 3:
-                break;
+                return "无事发生!";
         }
+        return "无事发生!";
     }
 
     /**
      * 4. 海洋Sea 专属随机事件
      * 怪物：仅鱼；材料：贝壳、鱼
      */
-    private void seaRandomEvent(){
+    public String seaRandomEvent(){
+        // 扣减1点行动点（可自定义数值）
+        player.setActionPoint(player.getActionPoint() - 1);
+        //每次探索 疲惫＋5
+        player.setFatigue(player.getFatigue()+5);
+
         int eventType = random.nextInt(4);
         Item2[] backpack = player.getBackpackArr();
         switch (eventType){
@@ -171,7 +194,7 @@ public class GameLogic {
                     }
                 }
                 bagUpDate();
-                break;
+                return "恭喜！你找到了1块灯塔碎片，离胜利又近了一步!";
             case 1:
                 String[] matList = {"贝壳","鱼"};
                 String targetMat = matList[random.nextInt(matList.length)];
@@ -183,16 +206,17 @@ public class GameLogic {
                     }
                 }
                 bagUpDate();
-                break;
+                return "恭喜！" + targetMat + "+" + addNum;
             case 2:
                 Monster2 monster = new Fish2();
                 int hurt = monster.getAttack();
                 int nowHp = player.getHp();
                 player.setHp(Math.max(0, nowHp - hurt));
-                break;
+                return "遇到怪物攻击！hp -" + hurt;
             case 3:
-                break;
+                return "无事发生!";
         }
+        return "无事发生!";
     }
 
     /**

@@ -102,11 +102,22 @@ public class Main {
     }
     //对外暴露的方法：切换加载不同地图
     public void loadMapPage(String fxmlPath) throws IOException{
-        //清空上一张地图
         mapDisplayPane.getChildren().clear();
-        //加载选中的地图FXML
-        Parent mapRoot = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(fxmlPath)));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+        Parent mapRoot = loader.load();
         mapDisplayPane.getChildren().add(mapRoot);
+
+        // 关键：判断加载的是哪个地图控制器，并传递Main实例
+        Object controller = loader.getController();
+        if (controller instanceof Forest) {
+            ((Forest) controller).setMainController(this);
+        }else if(controller instanceof Beach) {
+            ((Beach) controller).setMainController(this);
+        }else if(controller instanceof Rock) {
+            ((Rock) controller).setMainController(this);
+        }else if(controller instanceof Sea) {
+            ((Sea) controller).setMainController(this);
+        }
     }
     //休息
     @FXML

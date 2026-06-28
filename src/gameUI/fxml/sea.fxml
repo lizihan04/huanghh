@@ -6,14 +6,44 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="500.0" prefWidth="871.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gameUI.controller.Map">
+<AnchorPane prefHeight="500.0" prefWidth="871.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gameUI.controller.Sea">
    <children>
       <ImageView fitHeight="507.0" fitWidth="890.0" layoutX="-19.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../../resources/images/img_map/map_bg_sea.png" />
          </image>
       </ImageView>
-      <Button fx:id="exploreBtn" layoutX="396.0" layoutY="197.0" mnemonicParsing="false" onAction="#explore" prefHeight="30.0" prefWidth="30.0" text="!" textFill="RED">
+      <Button layoutX="396.0" layoutY="204.0" mnemonicParsing="false" onAction="#exploreSea" prefHeight="30.0" prefWidth="30.0" text="!" textFill="RED">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Button>
+      <Button layoutX="515.0" layoutY="61.0" mnemonicParsing="false" onAction="#exploreSea" prefHeight="30.0" prefWidth="30.0" text="!" textFill="RED">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Button>
+      <Button layoutX="500.0" layoutY="396.0" mnemonicParsing="false" onAction="#exploreSea" prefHeight="30.0" prefWidth="30.0" text="!" textFill="RED">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Button>
+      <Button layoutX="206.0" layoutY="250.0" mnemonicParsing="false" onAction="#exploreSea" prefHeight="30.0" prefWidth="30.0" text="!" textFill="RED">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Button>
+      <Button layoutX="777.0" layoutY="334.0" mnemonicParsing="false" onAction="#exploreSea" prefHeight="30.0" prefWidth="30.0" text="!" textFill="RED">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Button>
+      <Button layoutX="623.0" layoutY="167.0" mnemonicParsing="false" onAction="#exploreSea" prefHeight="30.0" prefWidth="30.0" text="!" textFill="RED">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Button>
+      <Button layoutX="260.0" layoutY="61.0" mnemonicParsing="false" onAction="#exploreSea" prefHeight="30.0" prefWidth="30.0" text="!" textFill="RED">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>

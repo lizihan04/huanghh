@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 
 
-<AnchorPane prefHeight="400.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CONTROLLER_NAME">
+<AnchorPane prefHeight="400.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gameUI.controller.Eat">
    <children>
       <GridPane layoutX="-1.0" prefHeight="400.0" prefWidth="400.0">
         <columnConstraints>
@@ -36,7 +36,7 @@
                   </StackPane>
                   <StackPane>
                      <children>
-                        <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="60.0" text="eat it!" />
+                        <Button mnemonicParsing="false" onAction="#eatCoco" prefHeight="40.0" prefWidth="60.0" text="eat it!" />
                      </children>
                   </StackPane>
                </children>
@@ -54,7 +54,7 @@
                   </StackPane>
                   <StackPane>
                      <children>
-                        <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="60.0" text="eat it!" />
+                        <Button mnemonicParsing="false" onAction="#eatFish" prefHeight="40.0" prefWidth="60.0" text="eat it!" />
                      </children>
                   </StackPane>
                </children>
@@ -72,7 +72,7 @@
                   </StackPane>
                   <StackPane>
                      <children>
-                        <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="60.0" text="eat it!" />
+                        <Button mnemonicParsing="false" onAction="#eatPig" prefHeight="40.0" prefWidth="60.0" text="eat it!" />
                      </children>
                   </StackPane>
                </children>
@@ -90,7 +90,7 @@
                   </StackPane>
                   <StackPane>
                      <children>
-                        <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="60.0" text="eat it!" />
+                        <Button mnemonicParsing="false" onAction="#eatRabbit" prefHeight="40.0" prefWidth="60.0" text="eat it!" />
                      </children>
                   </StackPane>
                </children>

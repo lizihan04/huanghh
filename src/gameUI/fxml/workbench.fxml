@@ -10,7 +10,6 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-
 <AnchorPane prefHeight="400.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gameUI.controller.Workbench">
    <children>
       <GridPane layoutX="-6.0" prefHeight="400.0" prefWidth="400.0">
@@ -37,7 +36,7 @@
                   </StackPane>
                   <StackPane prefHeight="35.0" prefWidth="300.0">
                      <children>
-                        <Button mnemonicParsing="false" text="make it !" />
+                        <Button mnemonicParsing="false" onAction="#makeAxe" text="make it !" />
                      </children>
                   </StackPane>
                </children>
@@ -55,7 +54,7 @@
                   </StackPane>
                   <StackPane prefHeight="35.0" prefWidth="300.0">
                      <children>
-                        <Button mnemonicParsing="false" text="make it !" />
+                        <Button mnemonicParsing="false" onAction="#makeShellAxe" text="make it !" />
                      </children>
                   </StackPane>
                </children>
@@ -73,7 +72,7 @@
                   </StackPane>
                   <StackPane prefHeight="35.0" prefWidth="300.0">
                      <children>
-                        <Button mnemonicParsing="false" text="make it !" />
+                        <Button mnemonicParsing="false" onAction="#makeHammer" text="make it !" />
                      </children>
                   </StackPane>
                </children>
@@ -91,7 +90,7 @@
                   </StackPane>
                   <StackPane prefHeight="35.0" prefWidth="300.0">
                      <children>
-                        <Button mnemonicParsing="false" text="make it !" />
+                        <Button mnemonicParsing="false" onAction="#makeDirk" text="make it !" />
                      </children>
                   </StackPane>
                </children>
@@ -127,7 +126,7 @@
                   </StackPane>
                   <StackPane prefHeight="35.0" prefWidth="300.0">
                      <children>
-                        <Button mnemonicParsing="false" text="make it !" />
+                        <Button mnemonicParsing="false" onAction="#makeClub" text="make it !" />
                      </children>
                   </StackPane>
                </children>

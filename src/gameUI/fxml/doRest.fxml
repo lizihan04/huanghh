@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="400.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gameUI.controller.DoRest">
+   <children>
+      <StackPane layoutY="123.0" prefHeight="277.0" prefWidth="400.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#doRest" prefHeight="50.0" prefWidth="120.0" text="点我😔">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Button>
+         </children>
+      </StackPane>
+      <StackPane prefHeight="253.0" prefWidth="400.0">
+         <children>
+            <Label text="点击！-10疲惫！">
+               <font>
+                  <Font size="36.0" />
+               </font>
+            </Label>
+         </children>
+      </StackPane>
+   </children>
+</AnchorPane>

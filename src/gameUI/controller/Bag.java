@@ -27,31 +27,17 @@ public class Bag {
     @FXML private Label club;
     @FXML private Label dirk;
 
-    // ==============================
-    // 【正确】FXML 加载完自动执行
-    // 这里绝对不能调用 refreshUI()
-    // ==============================
     @FXML
     public void initialize(){
-        System.out.println("背包界面加载成功");
+        main.refreshUI();
     }
 
-    // ==============================
-    // 【正确】主控制器调用这个方法
-    // ==============================
     public void setMainController(Main main) {
         this.main = main;
         this.player = Player2.getInstance();  // 在这里拿才安全！
         this.backpackArr = player.getBackpackArr();
-
-        // 现在才安全刷新！
-        refreshUI();
     }
 
-    // ==============================
-    // 【正确】刷新背包数量
-    // 加了安全判断，不会崩溃
-    // ==============================
     public void refreshUI() {
         if (backpackArr == null || backpackArr.length < 15) {
             System.out.println("背包数组为空或长度不够！");

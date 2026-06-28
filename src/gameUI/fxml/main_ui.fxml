@@ -189,7 +189,10 @@
                <content>
                   <AnchorPane fx:id="mapDisplayPane" prefHeight="500.0" prefWidth="889.0">
                      <children>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fitHeight="488.0" fitWidth="665.0" layoutY="39.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../resources/images/img_map/01.png" />
+                           </image></ImageView>
                      </children>
                   </AnchorPane>
                </content>
