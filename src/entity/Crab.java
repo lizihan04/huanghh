@@ -8,8 +8,6 @@ public class Crab extends Monster{
         setImgPath("monster_crab.png");
     }
 
-
-    //重写攻击方法
     @Override
     public void attack(Player player) {
         int atk = getAttack();
@@ -19,7 +17,7 @@ public class Crab extends Monster{
 
     @Override
     protected Item getFixedDrop() {
-        // 螃蟹掉落蟹肉
-        return new Food("蟹肉", "食物", "恢复饥饿值", "item_crabrou.png", 1, "生命值", 20);
+        // 蟹肉：描述恢复饥饿，对应 recoverType=hunger
+        return new Item("蟹肉", "food", "恢复饥饿值", "item_crabrou.png", "hunger", 20, 1);
     }
 }

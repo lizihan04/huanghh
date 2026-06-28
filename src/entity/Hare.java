@@ -17,6 +17,7 @@ public class Hare extends Monster {
 
     @Override
     protected Item getFixedDrop() {
-        return new Food("兔肉", "食物", "恢复生命值", "img/hare_meat.png", 1, "生命值", 12);
+        // 兔肉：恢复血量 hp
+        return new Item("兔肉", "food", "恢复生命值", "img/hare_meat.png", "hp", 12, 1);
     }
 }
