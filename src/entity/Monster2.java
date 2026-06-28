@@ -4,13 +4,13 @@ public abstract class Monster2 {
     //怪物属性（名字、伤害、掉落物品）
     private String name;
     private int attack;
-    private Item dropItem;
+    private Item2 dropItem;
 
     //构造方法
     public Monster2() {
     }
 
-    public Monster2(String name, int attack, Item dropItem) {
+    public Monster2(String name, int attack, Item2 dropItem) {
         this.name = name;
         this.attack = attack;
         this.dropItem = dropItem;
@@ -33,11 +33,12 @@ public abstract class Monster2 {
         this.attack = attack;
     }
 
-    public Item getDropItem() {
+    public Item2 getDropItem() {
         return dropItem;
     }
 
-    public void setDropItem(Item dropItem) {
+    public void setDropItem(Item2 dropItem) {
+
         this.dropItem = dropItem;
     }
 }
