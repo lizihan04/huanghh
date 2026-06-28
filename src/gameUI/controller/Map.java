@@ -42,7 +42,6 @@ public class Map {
     }
     //地图探索
 
-
     public void explore(){
         explore.randomEvent();
         main.refreshUI();
