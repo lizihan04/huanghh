@@ -72,7 +72,17 @@ public class GameLogic {
                 // 无事件
                 return "无事发生!";
         }
-        return "无事发生!";
+        // 新增：触发游戏结束判定
+        String result = "";
+        if(gameEnd()){
+            // 若游戏结束，追加结果提示
+            if(player.isGameWin()){
+                result += "\n★游戏胜利！你收集了足够的灯塔碎片，成功通关！★";
+            }else if(player.isGameOver()){
+                result += "\n★游戏失败！你的生存状态已达极限！★";
+            }
+        }
+        return result;
     }
 
     /**
@@ -243,7 +253,6 @@ public class GameLogic {
             }
         }
     }
-
     /**
      * 工作台合成物品预留空方法，和截图结构保持一致
      */
@@ -278,6 +287,10 @@ public class GameLogic {
 
         boolean isLose = hp <= 0 || hunger >= 100 || thirst >= 100 || fatigue >= 100 || day > 30;
         boolean isWin = frag >= MAX_FRAGMENT;
+
+        player.setGameOver(isLose);
+        player.setGameWin(isWin);
+
         return isLose || isWin;
     }
 
