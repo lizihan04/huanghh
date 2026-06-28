@@ -37,11 +37,12 @@ public class CraftingManager {
 
         Map<String, Integer> required = RecipeManagement.RECIPES.get(recipeName);
 
-        if (required.containsKey("树枝")) {
-            int need = required.get("树枝");
-            int have = countMaterialInBackpack("树枝");
+        // 检查材料
+        if (required.containsKey("木头")) {
+            int need = required.get("木头");
+            int have = countMaterialInBackpack("木头");
             if (have < need) {
-                System.out.println("材料不足：树枝 需要 " + need + " 个，当前有 " + have + " 个");
+                System.out.println("材料不足：木头 需要 " + need + " 个，当前有 " + have + " 个");
                 return false;
             }
         }
@@ -73,19 +74,28 @@ public class CraftingManager {
             }
         }
 
+        if (required.containsKey("矿石")) {
+            int need = required.get("矿石");
+            int have = countMaterialInBackpack("矿石");
+            if (have < need) {
+                System.out.println("材料不足：矿石 需要 " + need + " 个，当前有 " + have + " 个");
+                return false;
+            }
+        }
+
+        // 扣除材料
         for (Map.Entry<String, Integer> entry : required.entrySet()) {
             String materialName = entry.getKey();
             int needCount = entry.getValue();
             List<Item> backpack = player.getBackpack();
-            Iterator<Item> it = backpack.iterator();
             int remaining = needCount;
-            while (it.hasNext() && remaining > 0) {
-                Item item = it.next();
-                if (item.getName().equals(materialName) && "material".equals(item.getType())) {
+            for (int i = 0; i < backpack.size() && remaining > 0; i++) {
+                Item item = backpack.get(i);
+                if (item != null && item.getName().equals(materialName) && "material".equals(item.getType())) {
                     int have = item.getCount();
                     if (have <= remaining) {
                         remaining -= have;
-                        it.remove();
+                        backpack.set(i, null);
                     } else {
                         item.setCount(have - remaining);
                         remaining = 0;
@@ -94,14 +104,23 @@ public class CraftingManager {
             }
         }
 
-        Tool product = createToolByName(recipeName);
-        if (product != null) {
-            player.addItem(product);
-            System.out.println("合成成功！获得 " + product.getName());
+        // 生成产物
+        if ("灯塔碎片".equals(recipeName)) {
+            Clip fragment = new Clip("灯塔碎片", "fragment", "集齐20块可通关",
+                    "images/img_item/tool/item_tower.png", 1, 1);
+            player.addItem(fragment);
+            System.out.println("合成成功！获得 灯塔碎片");
             return true;
         } else {
-            System.out.println("合成失败：未知产物");
-            return false;
+            Tool product = createToolByName(recipeName);
+            if (product != null) {
+                player.addItem(product);
+                System.out.println("合成成功！获得 " + product.getName());
+                return true;
+            } else {
+                System.out.println("合成失败：未知产物");
+                return false;
+            }
         }
     }
 
@@ -109,7 +128,7 @@ public class CraftingManager {
         List<Item> backpack = player.getBackpack();
         int total = 0;
         for (Item item : backpack) {
-            if (item.getName().equals(materialName) && "material".equals(item.getType())) {
+            if (item != null && item.getName().equals(materialName) && "material".equals(item.getType())) {
                 total += item.getCount();
             }
         }

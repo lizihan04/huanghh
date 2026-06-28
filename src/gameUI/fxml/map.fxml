@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gameUI.controller.Map">
+   <children>
+      <VBox prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <StackPane prefHeight="50.0" prefWidth="200.0">
+               <children>
+                  <Button fx:id="btnForest" mnemonicParsing="false" onAction="#loadForestMap" prefHeight="30.0" prefWidth="100.0" text="森林" />
+               </children>
+            </StackPane>
+            <StackPane prefHeight="50.0">
+               <children>
+                  <Button fx:id="btnRock" mnemonicParsing="false" onAction="#loadRockMap" prefHeight="30.0" prefWidth="100.0" text="岩石区" />
+               </children>
+            </StackPane>
+            <StackPane prefHeight="50.0">
+               <children>
+                  <Button fx:id="btnBeach" mnemonicParsing="false" onAction="#loadBeachMap" prefHeight="30.0" prefWidth="100.0" text="沙滩" />
+               </children>
+            </StackPane>
+            <StackPane prefHeight="50.0">
+               <children>
+                  <Button fx:id="btnSea" mnemonicParsing="false" onAction="#loadSeaMap" prefHeight="30.0" prefWidth="100.0" text="海边" />
+               </children>
+            </StackPane>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

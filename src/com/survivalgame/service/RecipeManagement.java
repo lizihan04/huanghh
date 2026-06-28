@@ -37,5 +37,10 @@ public class RecipeManagement {
         stoneSword.put("石头", 3);
         stoneSword.put("藤蔓", 2);
         RECIPES.put("石剑", stoneSword);
+
+        // 灯塔碎片：7矿石合成1个碎片
+        Map<String, Integer> fragment = new HashMap<>();
+        fragment.put("矿石", 7);
+        RECIPES.put("灯塔碎片", fragment);
     }
 }
