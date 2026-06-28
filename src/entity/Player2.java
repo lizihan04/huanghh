@@ -37,4 +37,9 @@ public class Player2 {
     //工作台
     public void make(){}
     //
+
+    //getter() & setter()
+    public Item[] getBackpackArr(){
+        return this.backpackArr;
+    }
 }
