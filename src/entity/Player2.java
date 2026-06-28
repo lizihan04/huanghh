@@ -17,6 +17,7 @@ public class Player2 {
     private int day;//生存天数
     private int fragment;//碎片
     private int baseAttack;//玩家基础战斗力
+    private String space;//玩家所处地图
 
     //是否结束游戏
     private boolean isGameOver;
