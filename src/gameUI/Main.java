@@ -1,21 +1,20 @@
 package gameUI;
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-
 
 public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
-        Button btOK = new Button("OK");
-        Scene scene = new Scene(btOK,200,250);
-        stage.setTitle("MyJavaFX");
+        Parent root = FXMLLoader.load(getClass().getResource("fxml/main_ui.fxml"));
+        Scene scene = new Scene(root,800,600);
         stage.setScene(scene);
         stage.show();
     }
-    public static void mian(String[] args){
+    public static void main(String[] args){
         Application.launch(args);
     }
 }
