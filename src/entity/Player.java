@@ -39,24 +39,24 @@ public class Player {
 
     // 全部道具模板对象数组（固定顺序）
     public static final ItemData[] ALL_ITEM_ARR = {
-            new ItemData("椰子", "food", "恢复饥饿", "/images/img_item/food/item_coconut.png", "hunger", 20),
-            new ItemData("鱼", "food", "恢复口渴", "/images/img_item/food/item_fish.png", "thirst", 12),
-            new ItemData("猪肉", "food", "恢复血量", "/images/img_item/food/item_pork.png", "hp", 30),
-            new ItemData("兔肉", "food", "恢复疲惫", "/images/img_item/food/item_rabbit_meat.png", "fatigue", 22),
+            new ItemData("椰子", "food", "恢复饥渴", "/images/img_item/food/item_coconut.png", "hunger", 20,0),
+            new ItemData("鱼", "food", "恢复疲惫", "/images/img_item/food/item_fish.png", "thirst", 12,0),
+            new ItemData("猪肉", "food", "恢复饥饿", "/images/img_item/food/item_pork.png", "hp", 30,0),
+            new ItemData("兔肉", "food", "恢复血量", "/images/img_item/food/item_rabbit_meat.png", "fatigue", 22,0),
 
-            new ItemData("椰子树", "material", "合成材料", "/images/img_item/material/item_coconut_tree.png"),
-            new ItemData("矿石", "material", "合成材料", "/images/img_item/material/item_ore.png"),
-            new ItemData("贝壳", "material", "合成材料", "/images/img_item/material/item_shell.png"),
-            new ItemData("石头", "material", "合成材料", "/images/img_item/material/item_stone.png"),
-            new ItemData("藤蔓", "material", "合成材料", "/images/img_item/material/item_vine.png"),
-            new ItemData("木头", "material", "合成材料", "/images/img_item/material/item_wood.png"),
-            new ItemData("灯塔碎片", "material", "通关道具", "/images/img_item/tool/item_tower.png"),
+            new ItemData("椰子树", "material", "合成材料", "/images/img_item/material/item_coconut_tree.png",0),
+            new ItemData("矿石", "material", "合成材料", "/images/img_item/material/item_ore.png",0),
+            new ItemData("贝壳", "material", "合成材料", "/images/img_item/material/item_shell.png",0),
+            new ItemData("石头", "material", "合成材料", "/images/img_item/material/item_stone.png",0),
+            new ItemData("藤蔓", "material", "合成材料", "/images/img_item/material/item_vine.png",0),
+            new ItemData("木头", "material", "合成材料", "/images/img_item/material/item_wood.png",0),
+            new ItemData("灯塔碎片", "material", "通关道具", "/images/img_item/tool/item_tower.png",0),
 
-            new ItemData("斧头", "tool", "攻击+4，采集资源加成", "/images/img_item/tool/item_axe.png", 4, 3, 50),
-            new ItemData("贝刃", "tool", "攻击+3，无采集加成", "/images/img_item/tool/item_blade.png", 3, 0, 30),
-            new ItemData("锤子", "tool", "攻击+2，矿石采集加成", "/images/img_item/tool/item_hammer.png", 2, 4, 40),
-            new ItemData("木棍", "tool", "攻击+1，无采集加成", "/images/img_item/tool/item_stick.png", 1, 0, 20),
-            new ItemData("石剑", "tool", "攻击+8，无采集加成", "/images/img_item/tool/item_stone_sword.png", 8, 0, 35)
+            new ItemData("斧头", "tool", "攻击+4，采集资源加成", "/images/img_item/tool/item_axe.png", 4, 3, 50,0),
+            new ItemData("贝刃", "tool", "攻击+3，无采集加成", "/images/img_item/tool/item_blade.png", 3, 0, 30,0),
+            new ItemData("锤子", "tool", "攻击+2，矿石采集加成", "/images/img_item/tool/item_hammer.png", 2, 4, 40,0),
+            new ItemData("木棍", "tool", "攻击+1，无采集加成", "/images/img_item/tool/item_stick.png", 1, 0, 20,0),
+            new ItemData("石剑", "tool", "攻击+8，无采集加成", "/images/img_item/tool/item_stone_sword.png", 8, 0, 35,0)
     };
 
     // 初始化

@@ -34,6 +34,22 @@ public class Main {
         chooseStage.setResizable(false);
         chooseStage.showAndWait();
     }
+    //工作台
+    @FXML
+    public void openWorkbenchWindow() throws IOException{
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxml/workbench.fxml"));
+        Parent root = loader.load();
+        Workbench workbench= loader.getController();
+        //把主控制器传给弹窗，实现选中后回调加载地图
+        workbench.setMainController(this);
+        //创建模态弹窗
+        Stage chooseStage = new Stage();
+        chooseStage.setScene(new Scene(root));
+        chooseStage.setTitle("工作台");
+        chooseStage.initModality(Modality.APPLICATION_MODAL); //单弹窗操作
+        chooseStage.setResizable(false);
+        chooseStage.showAndWait();
+    }
     //地图选择器
     @FXML
     public void openMapChooseWindow() throws IOException{
@@ -57,5 +73,54 @@ public class Main {
         //加载选中的地图FXML
         Parent mapRoot = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(fxmlPath)));
         mapDisplayPane.getChildren().add(mapRoot);
+    }
+    //休息
+    @FXML
+    public void openRestWindow() throws IOException{
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxml/rest.fxml"));
+        Parent root = loader.load();
+        Rest rest = loader.getController();
+        //把主控制器传给弹窗，实现选中后回调加载地图
+        rest.setMainController(this);
+        //创建模态弹窗
+        Stage chooseStage = new Stage();
+        chooseStage.setScene(new Scene(root));
+        chooseStage.setTitle("休息中");
+        chooseStage.initModality(Modality.APPLICATION_MODAL); //单弹窗操作
+        chooseStage.setResizable(false);
+        chooseStage.showAndWait();
+    }
+    //下一天
+    @FXML
+    public void openNextDayWindow() throws IOException{
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxml/nextday.fxml"));
+        Parent root = loader.load();
+        NextDay nextday = loader.getController();
+        //把主控制器传给弹窗，实现选中后回调加载地图
+        nextday.setMainController(this);
+        //创建模态弹窗
+        Stage chooseStage = new Stage();
+        chooseStage.setScene(new Scene(root));
+        chooseStage.setTitle("下一天");
+        chooseStage.initModality(Modality.APPLICATION_MODAL); //单弹窗操作
+        chooseStage.setResizable(false);
+        chooseStage.showAndWait();
+    }
+
+    //帮助
+    @FXML
+    public void openHelpWindow() throws IOException{
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxml/help.fxml"));
+        Parent root = loader.load();
+        Help help = loader.getController();
+        //把主控制器传给弹窗，实现选中后回调加载地图
+        help.setMainController(this);
+        //创建模态弹窗
+        Stage chooseStage = new Stage();
+        chooseStage.setScene(new Scene(root));
+        chooseStage.setTitle("指引");
+        chooseStage.initModality(Modality.APPLICATION_MODAL); //单弹窗操作
+        chooseStage.setResizable(false);
+        chooseStage.showAndWait();
     }
 }

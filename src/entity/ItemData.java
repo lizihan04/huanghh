@@ -9,6 +9,7 @@ public class ItemData {
     private String itemType;     // 类型 food/material/tool
     private String effectDesc;   // 文字描述效果
     private String imgPath;      // 图片资源路径
+    private int count;           //物品数量
 
     // 食物专属属性
     private String recoverType;  // 恢复类型 hp/hunger/thirst/fatigue
@@ -21,7 +22,7 @@ public class ItemData {
 
     // ========== 构造器 3种 ==========
     // 1. 材料专用构造（无恢复、无工具属性）
-    public ItemData(String itemName, String itemType, String effectDesc, String imgPath) {
+    public ItemData(String itemName, String itemType, String effectDesc, String imgPath,int count) {
         this.itemName = itemName;
         this.itemType = itemType;
         this.effectDesc = effectDesc;
@@ -31,11 +32,12 @@ public class ItemData {
         this.attackBonus = 0;
         this.collectBonus = 0;
         this.durability = 0;
+        this.count = 0;
     }
 
     // 2. 食物专用构造
     public ItemData(String itemName, String itemType, String effectDesc, String imgPath,
-                    String recoverType, int recoverValue) {
+                    String recoverType, int recoverValue,int count) {
         this.itemName = itemName;
         this.itemType = itemType;
         this.effectDesc = effectDesc;
@@ -45,11 +47,12 @@ public class ItemData {
         this.attackBonus = 0;
         this.collectBonus = 0;
         this.durability = 0;
+        this.count = 0;
     }
 
     // 3. 工具专用构造
     public ItemData(String itemName, String itemType, String effectDesc, String imgPath,
-                    int attackBonus, int collectBonus, int durability) {
+                    int attackBonus, int collectBonus, int durability,int count) {
         this.itemName = itemName;
         this.itemType = itemType;
         this.effectDesc = effectDesc;
@@ -59,6 +62,8 @@ public class ItemData {
         this.attackBonus = attackBonus;
         this.collectBonus = collectBonus;
         this.durability = durability;
+        this.count = 0;
+
     }
 
     // ========== Getter 全部属性 ==========
@@ -97,4 +102,6 @@ public class ItemData {
     public int getDurability() {
         return durability;
     }
+
+    public int getCount() {return count; }
 }
