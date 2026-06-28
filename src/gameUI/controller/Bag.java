@@ -1,14 +1,14 @@
 package gameUI.controller;
-import entity.Item;
-import entity.Player;
+import entity.Item2;
+import entity.Player2;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
 public class Bag {
 
     private gameUI.controller.Main main;
-    private Player player;    // 只声明，不在这里初始化！
-    private Item[] backpackArr;
+    private Player2 player;    // 只声明，不在这里初始化！
+    private Item2[] backpackArr;
 
     // 背包物品数量展示
     @FXML private Label coco;
@@ -25,7 +25,7 @@ public class Bag {
     @FXML private Label shell_axe;
     @FXML private Label hammer;
     @FXML private Label club;
-    @FXML private Label drik;
+    @FXML private Label dirk;
 
     // ==============================
     // 【正确】FXML 加载完自动执行
@@ -41,8 +41,8 @@ public class Bag {
     // ==============================
     public void setMainController(Main main) {
         this.main = main;
-        this.player = Player.getInstance();  // 在这里拿才安全！
-        this.backpackArr = player.getBackpack();
+        this.player = Player2.getInstance();  // 在这里拿才安全！
+        this.backpackArr = player.getBackpackArr();
 
         // 现在才安全刷新！
         refreshUI();
@@ -72,6 +72,6 @@ public class Bag {
         shell_axe.setText(String.valueOf(backpackArr[11].getOwnCount()));
         hammer.setText(String.valueOf(backpackArr[12].getOwnCount()));
         club.setText(String.valueOf(backpackArr[13].getOwnCount()));
-        drik.setText(String.valueOf(backpackArr[14].getOwnCount()));
+        dirk.setText(String.valueOf(backpackArr[14].getOwnCount()));
     }
 }

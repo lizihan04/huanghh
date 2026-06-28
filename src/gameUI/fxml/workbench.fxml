@@ -11,9 +11,9 @@
 <?import javafx.scene.layout.VBox?>
 
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gameUI.controller.Workbench">
+<AnchorPane prefHeight="400.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gameUI.controller.Workbench">
    <children>
-      <GridPane layoutX="-6.0" prefHeight="400.0" prefWidth="600.0">
+      <GridPane layoutX="-6.0" prefHeight="400.0" prefWidth="400.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -24,11 +24,11 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <VBox prefHeight="125.0" prefWidth="270.0">
+            <VBox prefHeight="125.0" prefWidth="200.0">
                <children>
-                  <StackPane>
+                  <StackPane prefWidth="200.0">
                      <children>
-                        <ImageView fitHeight="99.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="99.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../../resources/images/img_item/tool/item_axe.png" />
                            </image>
@@ -37,16 +37,16 @@
                   </StackPane>
                   <StackPane prefHeight="35.0" prefWidth="300.0">
                      <children>
-                        <Button mnemonicParsing="false" text="Button" />
+                        <Button mnemonicParsing="false" text="make it !" />
                      </children>
                   </StackPane>
                </children>
             </VBox>
             <VBox prefHeight="125.0" prefWidth="270.0" GridPane.columnIndex="1">
                <children>
-                  <StackPane>
+                  <StackPane prefWidth="200.0">
                      <children>
-                        <ImageView fitHeight="99.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="99.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../../resources/images/img_item/tool/item_blade.png" />
                            </image>
@@ -55,16 +55,16 @@
                   </StackPane>
                   <StackPane prefHeight="35.0" prefWidth="300.0">
                      <children>
-                        <Button mnemonicParsing="false" text="Button" />
+                        <Button mnemonicParsing="false" text="make it !" />
                      </children>
                   </StackPane>
                </children>
             </VBox>
             <VBox prefHeight="125.0" prefWidth="270.0" GridPane.rowIndex="1">
                <children>
-                  <StackPane>
+                  <StackPane prefWidth="200.0">
                      <children>
-                        <ImageView fitHeight="99.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="99.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../../resources/images/img_item/tool/item_hammer.png" />
                            </image>
@@ -73,16 +73,16 @@
                   </StackPane>
                   <StackPane prefHeight="35.0" prefWidth="300.0">
                      <children>
-                        <Button mnemonicParsing="false" text="Button" />
+                        <Button mnemonicParsing="false" text="make it !" />
                      </children>
                   </StackPane>
                </children>
             </VBox>
             <VBox prefHeight="125.0" prefWidth="270.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
-                  <StackPane>
+                  <StackPane prefWidth="200.0">
                      <children>
-                        <ImageView fitHeight="99.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="99.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../../resources/images/img_item/tool/item_stonesword.png" />
                            </image>
@@ -91,16 +91,16 @@
                   </StackPane>
                   <StackPane prefHeight="35.0" prefWidth="300.0">
                      <children>
-                        <Button mnemonicParsing="false" text="Button" />
+                        <Button mnemonicParsing="false" text="make it !" />
                      </children>
                   </StackPane>
                </children>
             </VBox>
             <VBox prefHeight="125.0" prefWidth="270.0" GridPane.rowIndex="2">
                <children>
-                  <StackPane>
+                  <StackPane prefWidth="200.0">
                      <children>
-                        <ImageView fitHeight="99.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="99.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../../resources/images/img_item/tool/item_tower.png" />
                            </image>
@@ -109,16 +109,16 @@
                   </StackPane>
                   <StackPane prefHeight="35.0" prefWidth="300.0">
                      <children>
-                        <Button mnemonicParsing="false" text="Button" />
+                        <Button mnemonicParsing="false" text="make it !" />
                      </children>
                   </StackPane>
                </children>
             </VBox>
             <VBox prefHeight="125.0" prefWidth="270.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <children>
-                  <StackPane>
+                  <StackPane prefWidth="200.0">
                      <children>
-                        <ImageView fitHeight="99.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="99.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../../resources/images/img_item/tool/item_stick.png" />
                            </image>
@@ -127,7 +127,7 @@
                   </StackPane>
                   <StackPane prefHeight="35.0" prefWidth="300.0">
                      <children>
-                        <Button mnemonicParsing="false" text="Button" />
+                        <Button mnemonicParsing="false" text="make it !" />
                      </children>
                   </StackPane>
                </children>

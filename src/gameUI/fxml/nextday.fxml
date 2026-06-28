@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="gameUI.controller.NextDay"
-            prefHeight="400.0" prefWidth="600.0">
 
+<AnchorPane prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gameUI.controller.NextDay">
+   <children>
+      <StackPane prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <Label prefHeight="54.0" prefWidth="120.0" text="休息矣！行动点恢复！" />
+         </children>
+      </StackPane>
+   </children>
 </AnchorPane>
