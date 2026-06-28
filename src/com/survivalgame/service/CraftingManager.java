@@ -1,7 +1,9 @@
 package com.survivalgame.service;
 
-import entity.*;
-import java.util.*;
+import entity.Item;
+import entity.Player;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CraftingManager {
 
@@ -29,6 +31,9 @@ public class CraftingManager {
         return RecipeManagement.RECIPES.get(recipeName);
     }
 
+    /**
+     * 执行合成
+     */
     public boolean craftItem(String recipeName) {
         if (!RecipeManagement.RECIPES.containsKey(recipeName)) {
             System.out.println("未知配方：" + recipeName);
@@ -37,85 +42,53 @@ public class CraftingManager {
 
         Map<String, Integer> required = RecipeManagement.RECIPES.get(recipeName);
 
-        // 检查材料
-        if (required.containsKey("木头")) {
-            int need = required.get("木头");
-            int have = countMaterialInBackpack("木头");
-            if (have < need) {
-                System.out.println("材料不足：木头 需要 " + need + " 个，当前有 " + have + " 个");
+        // 统一循环校验所有材料（删除重复if，通用逻辑）
+        for(Map.Entry<String,Integer> entry : required.entrySet()){
+            String matName = entry.getKey();
+            int need = entry.getValue();
+            int have = countMaterialInBackpack(matName);
+            if(have < need){
+                System.out.println("材料不足：" + matName + " 需要 " + need + " 个，当前有 " + have + " 个");
                 return false;
             }
         }
 
-        if (required.containsKey("石头")) {
-            int need = required.get("石头");
-            int have = countMaterialInBackpack("石头");
-            if (have < need) {
-                System.out.println("材料不足：石头 需要 " + need + " 个，当前有 " + have + " 个");
-                return false;
-            }
-        }
-
-        if (required.containsKey("贝壳")) {
-            int need = required.get("贝壳");
-            int have = countMaterialInBackpack("贝壳");
-            if (have < need) {
-                System.out.println("材料不足：贝壳 需要 " + need + " 个，当前有 " + have + " 个");
-                return false;
-            }
-        }
-
-        if (required.containsKey("藤蔓")) {
-            int need = required.get("藤蔓");
-            int have = countMaterialInBackpack("藤蔓");
-            if (have < need) {
-                System.out.println("材料不足：藤蔓 需要 " + need + " 个，当前有 " + have + " 个");
-                return false;
-            }
-        }
-
-        if (required.containsKey("矿石")) {
-            int need = required.get("矿石");
-            int have = countMaterialInBackpack("矿石");
-            if (have < need) {
-                System.out.println("材料不足：矿石 需要 " + need + " 个，当前有 " + have + " 个");
-                return false;
-            }
-        }
-
-        // 扣除材料
+        // 扣除对应材料数量（数组固定下标，只减少ownCount，不置空对象）
         for (Map.Entry<String, Integer> entry : required.entrySet()) {
             String materialName = entry.getKey();
-            int needCount = entry.getValue();
-            List<Item> backpack = player.getBackpack();
-            int remaining = needCount;
-            for (int i = 0; i < backpack.size() && remaining > 0; i++) {
-                Item item = backpack.get(i);
-                if (item != null && item.getName().equals(materialName) && "material".equals(item.getType())) {
-                    int have = item.getCount();
-                    if (have <= remaining) {
-                        remaining -= have;
-                        backpack.set(i, null);
+            int deductCount = entry.getValue();
+            Item[] backpack = player.getBackpack();
+            int remainDeduct = deductCount;
+
+            for (Item item : backpack) {
+                if(remainDeduct <= 0) break;
+                if (item != null
+                        && materialName.equals(item.getItemName())
+                        && "material".equals(item.getItemType())) {
+                    int own = item.getOwnCount();
+                    if (own <= remainDeduct) {
+                        remainDeduct -= own;
+                        item.setOwnCount(0);
                     } else {
-                        item.setCount(have - remaining);
-                        remaining = 0;
+                        item.reduceCount(remainDeduct);
+                        remainDeduct = 0;
                     }
                 }
             }
         }
 
-        // 生成产物
+        // 生成产物，调用player.addItem(名称,数量)
         if ("灯塔碎片".equals(recipeName)) {
-            Clip fragment = new Clip("灯塔碎片", "fragment", "集齐20块可通关",
-                    "images/img_item/tool/item_tower.png", 1, 1);
-            player.addItem(fragment);
+            player.addItem("灯塔碎片", 1);
             System.out.println("合成成功！获得 灯塔碎片");
             return true;
         } else {
-            Tool product = createToolByName(recipeName);
-            if (product != null) {
-                player.addItem(product);
-                System.out.println("合成成功！获得 " + product.getName());
+            // 根据配方名创建对应工具Item，固定数量1
+            String toolName = recipeName;
+            Item toolItem = createToolItemByName(toolName);
+            if (toolItem != null) {
+                player.addItem(toolItem.getItemName(), 1);
+                System.out.println("合成成功！获得 " + toolItem.getItemName());
                 return true;
             } else {
                 System.out.println("合成失败：未知产物");
@@ -124,29 +97,40 @@ public class CraftingManager {
         }
     }
 
+    /**
+     * 统计背包内指定材料总数量
+     */
     private int countMaterialInBackpack(String materialName) {
-        List<Item> backpack = player.getBackpack();
+        Item[] backpack = player.getBackpack();
         int total = 0;
         for (Item item : backpack) {
-            if (item != null && item.getName().equals(materialName) && "material".equals(item.getType())) {
-                total += item.getCount();
+            if (item != null
+                    && materialName.equals(item.getItemName())
+                    && "material".equals(item.getItemType())) {
+                total += item.getOwnCount();
             }
         }
         return total;
     }
 
-    private Tool createToolByName(String name) {
+    /**
+     * 创建标准工具Item对象（无Tool子类，统一Item三类构造器）
+     */
+    private Item createToolItemByName(String name) {
         switch (name) {
             case "贝刃":
-                return new Tool("贝刃", "weapon", "用来开椰子", "images/img_item/tool/item_shell_blade.png", 1, 15, 0, 15);
+                // Item(String name, type, desc, img, attackBonus, maxDur, ownCount)
+                return new Item("贝刃", "tool", "攻击+3，无采集加成",
+                        "/images/img_item/tool/item_blade.png", 3, 30, 1);
             case "石刃":
-                return new Tool("石刃", "weapon", "锋利石刃", "images/img_item/tool/item_stone_blade.png", 1, 12, 0, 20);
+                return new Item("石剑", "tool", "攻击+8，无采集加成",
+                        "/images/img_item/tool/item_stone_sword.png", 8, 35, 1);
             case "木棒":
-                return new Tool("木棒", "weapon", "近战武器", "images/img_item/tool/item_wood_club.png", 1, 10, 0, 30);
+                return new Item("木棍", "tool", "攻击+1，无采集加成",
+                        "/images/img_item/tool/item_stick.png", 1, 20, 1);
             case "锤子":
-                return new Tool("锤子", "weapon", "钝器", "images/img_item/tool/item_hammer.png", 1, 8, 0, 25);
-            case "石剑":
-                return new Tool("石剑", "weapon", "近战武器", "images/img_item/tool/item_stone_sword.png", 1, 15, 0, 30);
+                return new Item("锤子", "tool", "攻击+2，矿石采集加成",
+                        "/images/img_item/tool/item_hammer.png", 2, 40, 1);
             default:
                 return null;
         }

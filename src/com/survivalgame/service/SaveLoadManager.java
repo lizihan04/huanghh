@@ -1,8 +1,8 @@
 package com.survivalgame.service;
 
-import entity.*;
+import entity.Item;
+import entity.Player;
 import com.survivalgame.util.FileUtil;
-import java.util.*;
 
 public class SaveLoadManager {
 
@@ -45,8 +45,12 @@ public class SaveLoadManager {
         return true;
     }
 
+    /**
+     * 覆盖当前玩家所有数据
+     */
     private void copyPlayerData(Player loaded) {
         Player current = Player.getInstance();
+        // 基础生存属性
         current.setHp(loaded.getHp());
         current.setHunger(loaded.getHunger());
         current.setThirst(loaded.getThirst());
@@ -57,29 +61,51 @@ public class SaveLoadManager {
         current.setBaseAttack(loaded.getBaseAttack());
         current.setDefense(loaded.getDefense());
         current.setLighthouseProgress(loaded.getLighthouseProgress());
-        List<Item> newBackpack = new ArrayList<>();
-        for (Item item : loaded.getBackpack()) {
-            newBackpack.add(copyItem(item));
+
+        // 背包覆盖：原背包数组全部置0，再把读档数据同步数量
+        Item[] currentBag = current.getBackpack();
+        Item[] loadedBag = loaded.getBackpack();
+
+        // 1. 清空当前背包所有物品数量
+        for(Item item : currentBag){
+            if(item != null) item.setOwnCount(0);
         }
-        current.getBackpack().clear();
-        current.getBackpack().addAll(newBackpack);
+        // 2. 同步读档背包数量（下标一一对应）
+        for(int i = 0; i < loadedBag.length; i++){
+            Item loadItem = loadedBag[i];
+            if(loadItem != null && currentBag[i] != null){
+                currentBag[i].setOwnCount(loadItem.getOwnCount());
+                // 同步工具耐久
+                if("tool".equals(loadItem.getItemType())){
+                    currentBag[i].setCurrentDurability(loadItem.getCurrentDurability());
+                }
+            }
+        }
         current.checkGameOver();
     }
 
+    /**
+     * 复制Item对象（适配新版单一Item类，无Food/Tool子类）
+     */
     private Item copyItem(Item src) {
-        if (src instanceof Food) {
-            Food f = (Food) src;
-            return new Food(f.getName(), f.getType(), f.getEffect(), f.getImgPath(),
-                    f.getCount(), f.getRecoverType(), f.getRecoverValue());
-        } else if (src instanceof Tool) {
-            Tool t = (Tool) src;
-            return new Tool(t.getName(), t.getType(), t.getEffect(), t.getImgPath(),
-                    t.getCount(), t.getAttackBonus(), t.getCollectBonus(), t.getDurability());
-        } else if (src instanceof Clip) {
-            Clip c = (Clip) src;
-            return new Clip(c.getName(), c.getType(), c.getEffect(), c.getImgPath(),
-                    c.getCount(), c.getClipId());
+        if(src == null) return null;
+        String name = src.getItemName();
+        String type = src.getItemType();
+        String desc = src.getEffectDesc();
+        String img = src.getImgPath();
+        int count = src.getOwnCount();
+
+        switch (type) {
+            case "food":
+                return new Item(name, type, desc, img,
+                        src.getRecoverType(), src.getRecoverValue(), count);
+            case "material":
+                return new Item(name, type, desc, img, count);
+            case "tool":
+                return new Item(name, type, desc, img,
+                        src.getAttackBonus(), src.getMaxDurability(), count);
+            default:
+                return null;
         }
-        return null;
     }
 }

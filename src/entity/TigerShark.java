@@ -18,7 +18,8 @@ public class TigerShark extends Monster {
 
     @Override
     protected Item getFixedDrop() {
-        // 虎鲨掉落鱼肉
-        return new Food("鲨鱼肉", "食物", "恢复生命", "item_fish.png", 1, "生命值", 35);
+        // 使用Item食物专属构造器，参数规则：
+        // Item(名称, itemType固定food, 描述, 图片路径, 恢复类型hp/hunger/fatigue/thirst, 恢复数值, 持有数量)
+        return new Item("鲨鱼肉", "food", "恢复生命", "item_fish.png", "hp", 35, 1);
     }
 }
