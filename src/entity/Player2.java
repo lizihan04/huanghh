@@ -48,7 +48,7 @@ public class Player2 {
                 // 椰子：降低口渴值
                 new Food2("椰子", 0, "thirst", 20),
                 // 鱼：降低疲惫值
-                new Food2("鱼", 0, "fatigue", 12),
+                new Food2("鱼", 0, "fatigue", 25),
                 // 猪肉：提升血量
                 new Food2("猪肉", 0, "hp", 30),
                 // 兔肉：降低饥饿值
@@ -165,7 +165,7 @@ public class Player2 {
             return;
         }
         actionPoint--;
-        fatigue = Math.max(0, fatigue - 5);
+        fatigue = Math.max(0, fatigue - 15);
     }
 
     // 下一天：时间流逝，饥饿、口渴负面值上涨（变大）
