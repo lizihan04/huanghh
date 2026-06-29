@@ -13,10 +13,10 @@ public class Player2 {
     }
     private static final int MAX_FRAGMENT = 20;//通关需要20块碎片
     //玩家属性（总）
-    private int hp;//血量 正向，越高越好
-    private int hunger;//饥饿 负面，数值越大越饿，吃东西减少
-    private int thirst;//口渴 负面，数值越大越渴，吃东西减少
-    private int fatigue;//疲惫 负面，数值越大越累，吃东西减少
+    private int hp;//血量
+    private int hunger;//饥饿
+    private int thirst;//口渴
+    private int fatigue;//疲惫
     private int actionPoint;//行动点
     private int day;//生存天数
     private int fragment;//碎片
@@ -45,14 +45,14 @@ public class Player2 {
 
         backpackArr = new Item2[]{
                 // ========== 食物 Food2(名称, 初始数量, 恢复类型, 恢复数值) ==========
-                // 椰子：降低口渴值
+                // 椰子：降低口渴值、降低疲惫
                 new Food2("椰子", 0, "thirst", 20),
-                // 鱼：降低疲惫值
-                new Food2("鱼", 0, "fatigue", 25),
-                // 猪肉：提升血量
-                new Food2("猪肉", 0, "hp", 30),
-                // 兔肉：降低饥饿值
-                new Food2("兔肉", 0, "hunger", 22),
+                // 鱼：降低饥饿值、降低疲惫、提升血量
+                new Food2("鱼", 0, "hunger", 20),
+                // 猪肉：降低饥饿值、降低疲惫、提升血量
+                new Food2("猪肉", 0, "hunger", 30),
+                // 兔肉：降低饥饿值、降低疲惫、提升血量
+                new Food2("兔肉", 0, "hunger", 20),
 
                 // ========== 材料 Material2(名称, 初始数量) ==========
                 new Material2("矿石", 0),
@@ -71,7 +71,7 @@ public class Player2 {
         };
     }
 
-    // 统一休息入口：1=吃东西，2=原地休息，无独立eat方法
+    // 统一休息入口：1=吃东西，2=原地休息
     public void eatOrRest(int choose) {
         if (GameLogic.getInstance().gameEnd()) {
             return;
@@ -88,10 +88,9 @@ public class Player2 {
         }
     }
 
-    // 打开食物选择弹窗/页面（UI渲染层，只做页面跳转）
+    // 打开食物选择弹窗/页面
     private void openFoodSelectPage() {
-        // UI页面渲染四个按钮：吃椰子、吃兔肉、吃鱼、吃猪肉
-        // 按钮分别绑定 eatCoco() / eatRabbitMeat() / eatFish() / eatPork()
+
     }
 
     // ========== 4个独立进食方法，分别对应四种食物 ==========
@@ -136,23 +135,46 @@ public class Player2 {
             return;
         }
 
-        String recoverType = foodObj.getRecoverType();
-        int val = foodObj.getRecoverValue();
-        switch (recoverType) {
-            case "hp":
-                hp = Math.min(100, hp + val);
+        switch (foodName) {
+            case "猪肉":
+                hunger = Math.max(0, hunger - 30);
+                fatigue = Math.max(0, fatigue - 10);
+                hp = Math.min(100, hp + 15);
                 break;
-            case "hunger":
-                hunger = Math.max(0, hunger - val);
+            case "兔肉":
+                hunger = Math.max(0, hunger - 20);
+                fatigue = Math.max(0, fatigue - 10);
+                hp = Math.min(100, hp + 10);
                 break;
-            case "thirst":
-                thirst = Math.max(0, thirst - val);
+            case "椰子":
+                thirst = Math.max(0, thirst - 20);
+                fatigue = Math.max(0, fatigue - 10);
                 break;
-            case "fatigue":
-                fatigue = Math.max(0, fatigue - val);
+            case "鱼":
+                hunger = Math.max(0, hunger - 20);
+                fatigue = Math.max(0, fatigue - 10);
+                hp = Math.min(100, hp + 10);
                 break;
             default:
-                return;
+                String recoverType = foodObj.getRecoverType();
+                int val = foodObj.getRecoverValue();
+                switch (recoverType) {
+                    case "hp":
+                        hp = Math.min(100, hp + val);
+                        break;
+                    case "hunger":
+                        hunger = Math.max(0, hunger - val);
+                        break;
+                    case "thirst":
+                        thirst = Math.max(0, thirst - val);
+                        break;
+                    case "fatigue":
+                        fatigue = Math.max(0, fatigue - val);
+                        break;
+                    default:
+                        return;
+                }
+                break;
         }
         // 消耗一个食物
         foodObj.setOwnCount(foodObj.getOwnCount() - 1);

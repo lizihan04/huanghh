@@ -106,7 +106,7 @@ public class GameLogic {
             }
             bagUpDate();
             return finishEventResult("恭喜！你找到了1块灯塔碎片!");
-        } else if (eventType < 5) {
+        } else if (eventType < 8) {
             // 沙滩专属材料
             String[] matList = {"贝壳","椰子"};
             String targetMat = matList[random.nextInt(matList.length)];
@@ -160,7 +160,7 @@ public class GameLogic {
             }
             bagUpDate();
             return finishEventResult("恭喜！" + targetMat + "+" + addNum);
-        } else if (eventType < 7) {
+        } else if (eventType < 8) {
             Monster2 monster;
             if(random.nextBoolean()){
                 monster = new Hare2();
@@ -210,7 +210,7 @@ public class GameLogic {
             }
             bagUpDate();
             return finishEventResult("恭喜！" + targetMat + "+" + addNum);
-        } else if (eventType < 7) {
+        } else if (eventType < 8) {
             currentMonster = new Boar2();
             return finishEventResult("遭遇" + currentMonster.getName() + "，请选择武器进行战斗。");
         } else {
@@ -254,7 +254,7 @@ public class GameLogic {
             }
             bagUpDate();
             return finishEventResult("恭喜！" + targetMat + "+" + addNum);
-        } else if (eventType < 7) {
+        } else if (eventType < 8) {
             currentMonster = new Fish2();
             return finishEventResult("遭遇" + currentMonster.getName() + "，请选择武器进行战斗。");
         } else {
