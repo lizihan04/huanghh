@@ -1,8 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
-
+<?import javafx.scene.layout.VBox?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gameUI.controller.Help">
-
+   <children>
+      <ScrollPane fitToWidth="true" layoutX="0.0" layoutY="0.0" prefHeight="400.0" prefWidth="600.0">
+         <content>
+            <VBox spacing="10.0" prefWidth="580.0" style="-fx-padding: 16;">
+               <children>
+                  <Label text="游戏指引" style="-fx-font-size: 20px; -fx-font-weight: bold;" wrapText="true" />
+                  <Label wrapText="true" text="世界观背景：&#10;这座孤岛曾是隐秘生物研究所，研究员改造野生动物的实验彻底失控，变异巨兽被封印在海岛灯塔。一场风暴摧毁撤离船只，幸存研究员四散逃亡，留下数块记载真相的灯塔碎片散落在岛屿四角。岛屿被研究所能量场笼罩，夜晚能量震荡（瘴气）会让所有生灵昏睡，而苏醒时，发现新的一天已经到来。&#10;&#10;你是一名007的小厂程序员，正乘坐轮船跨越大西洋准备去见你素未谋面的甲方。不巧，一场风暴让你流落到了这个荒岛，你的求生之旅也就此展开……（点击问号查看指引）" />
+                  <Label text="核心目标：" style="-fx-font-size: 16px; -fx-font-weight: bold;" wrapText="true" />
+                  <Label wrapText="true" text="在三十天之内，收集分布在沙滩、丛林、岩地、海岸的20块灯塔碎片，点亮灯塔，了结实验灾难，获得救援。三十天之后，瘴气将笼罩全岛，而你将一睡不起。注意：当你的属性低于或超过某一限制，你将死亡，永远留在这里。" />
+                  <Label text="基础生存机制：" style="-fx-font-size: 16px; -fx-font-weight: bold;" wrapText="true" />
+                  <Label wrapText="true" text="1. 行动与重置机制：玩家每天将获得10个行动点，行动点不会累计，第二天自动刷新为10点。以下事件均会消耗1点行动点：探索、休息、合成工具。若你想躺平，可点击‘下一天’直接进入下一天。" />
+                  <Label wrapText="true" text="2. 物资与背包系统：游戏中所有能获得的材料、食物、道具已在背包中显现。" />
+                  <Label wrapText="true" text="3. 工具合成系统（工作台）：不同武器对武力有不同的提升。配方如下：木棍：藤蔓2 木头3；贝刃：木棍1 贝壳3；石剑：木棍2 矿石5；斧头：木棍1 矿石3；锤子：木棍1 矿石3。" />
+                  <Label wrapText="true" text="4. 地图切换：点击地图按钮可选择你想要到达的地形。" />
+                  <Label wrapText="true" text="5. 探索系统：点击探索按钮后，你将于当前地图进行探索。探索过程中可能会遇到：无事发生、获取资源、遭遇野兽三类事件。遇到野兽时，将与野兽搏斗，一局定生死（攻击值谁大谁活）。" />
+                  <Label wrapText="true" text="6. 属性失败条件：生命值归零、饥饿值达到100、口渴值达到100、疲惫值达到100时即判定失败。" />
+               </children>
+            </VBox>
+         </content>
+      </ScrollPane>
+   </children>
 </AnchorPane>
