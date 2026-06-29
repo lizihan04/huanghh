@@ -1,9 +1,11 @@
 package gameUI.controller;
 
 import com.survivalgame.service.Recipe2;
+import entity.Player2;
 import javafx.fxml.FXML;
 
 public class Workbench {
+    private Player2 player = Player2.getInstance();
     private gameUI.controller.Main main;
     private Recipe2 recipe = new Recipe2();
     public void setMainController(Main main) {
@@ -45,9 +47,13 @@ public class Workbench {
         if (this.main != null) this.main.refreshUI();
     }
     //碎片配方
-//    @FXML
-//    public void makeFragment(){
-//        recipe.axe();
-//    }
+    @FXML
+    public void makeFragment(){
+        recipe.fragment();
+        player.setFragment(player.getFragment() + 1);
+        com.survivalgame.service.GameLogic.getInstance().bagUpDate();
+//        if (this.main != null)
+            this.main.refreshUI();
+    }
 
 }

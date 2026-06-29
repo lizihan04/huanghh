@@ -66,4 +66,15 @@ public class Recipe2 {
         }
     }
 
+    //制作碎片
+    public void fragment(){
+        if(backpackArr[4].getOwnCount()>=4){
+            backpackArr[4].setOwnCount(backpackArr[4].getOwnCount()-4);
+            backpackArr[9].setOwnCount(backpackArr[9].getOwnCount()+1);
+        }else{
+            System.out.println("材料不足");
+        }
+    }
+
+
 }
