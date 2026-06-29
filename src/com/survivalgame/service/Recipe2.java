@@ -12,7 +12,8 @@ public class Recipe2 {
         if(backpackArr[7].getOwnCount()>=2 && backpackArr[8].getOwnCount()>=3){
             backpackArr[7].setOwnCount(backpackArr[7].getOwnCount()-2);
             backpackArr[8].setOwnCount(backpackArr[8].getOwnCount()-3);
-            backpackArr[13].setOwnCount(backpackArr[9].getOwnCount()+1);
+            // ai: 修复合成后目标栏位更新，原代码误用了下标9
+            backpackArr[13].setOwnCount(backpackArr[13].getOwnCount()+1);
         }else{
             System.out.println("材料不足");
         }
@@ -44,7 +45,8 @@ public class Recipe2 {
     public void axe(){
         if(backpackArr[13].getOwnCount()>=1&&backpackArr[4].getOwnCount()>=3){
             backpackArr[13].setOwnCount(backpackArr[13].getOwnCount()-1);
-            backpackArr[4].setOwnCount(backpackArr[8].getOwnCount()-3);
+            // ai: 修复消耗材料计数，原先误修改了index 8
+            backpackArr[4].setOwnCount(backpackArr[4].getOwnCount()-3);
             backpackArr[10].setOwnCount(backpackArr[10].getOwnCount()+1);
         }else{
             System.out.println("材料不足");

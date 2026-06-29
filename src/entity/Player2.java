@@ -176,8 +176,8 @@ public class Player2 {
         day++;
         actionPoint = 10;
         // 每天饥饿、口渴数值增加（更饿更渴）
-        hunger = hunger + 10;
-        thirst = thirst + 5;
+        setHunger(hunger + 10);
+        setThirst(thirst + 5);
     }
 
     // 私有工具：根据物品名称查下标
@@ -195,28 +195,28 @@ public class Player2 {
         return hp;
     }
     public void setHp(int hp) {
-        this.hp = hp;
+        this.hp = Math.max(0, Math.min(100, hp));
     }
 
     public int getHunger() {
         return hunger;
     }
     public void setHunger(int hunger) {
-        this.hunger = hunger;
+        this.hunger = Math.max(0, Math.min(100, hunger));
     }
 
     public int getThirst() {
         return thirst;
     }
     public void setThirst(int thirst) {
-        this.thirst = thirst;
+        this.thirst = Math.max(0, Math.min(100, thirst));
     }
 
     public int getFatigue() {
         return fatigue;
     }
     public void setFatigue(int fatigue) {
-        this.fatigue = fatigue;
+        this.fatigue = Math.max(0, Math.min(100, fatigue));
     }
 
     public int getActionPoint() {

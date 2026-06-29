@@ -12,22 +12,37 @@ public class Workbench {
     @FXML
     public void makeAxe(){
         recipe.axe();
+        // ai: 合成后刷新背包数据与主界面属性
+        com.survivalgame.service.GameLogic.getInstance().bagUpDate();
+        if (this.main != null) this.main.refreshUI();
     }
     @FXML
     public void makeShellAxe(){
         recipe.beiRen();
+        // ai: 合成后刷新背包数据与主界面属性
+        com.survivalgame.service.GameLogic.getInstance().bagUpDate();
+        if (this.main != null) this.main.refreshUI();
     }
     @FXML
     public void makeHammer(){
         recipe.hammer();
+        // ai: 合成后刷新背包数据与主界面属性
+        com.survivalgame.service.GameLogic.getInstance().bagUpDate();
+        if (this.main != null) this.main.refreshUI();
     }
     @FXML
     public void makeDirk(){
         recipe.stoneSword();
+        // ai: 合成后刷新背包数据与主界面属性
+        com.survivalgame.service.GameLogic.getInstance().bagUpDate();
+        if (this.main != null) this.main.refreshUI();
     }
     @FXML
     public void makeClub(){
         recipe.woodStick();
+        // ai: 合成后刷新背包数据与主界面属性
+        com.survivalgame.service.GameLogic.getInstance().bagUpDate();
+        if (this.main != null) this.main.refreshUI();
     }
     //碎片配方
 //    @FXML

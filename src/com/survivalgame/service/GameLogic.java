@@ -23,6 +23,61 @@ public class GameLogic {
     private final Random random = new Random();
     private static final int MAX_FRAGMENT = 20;
 
+    // 当前遭遇的怪物，用于武器选择战斗
+    private Monster2 currentMonster;
+
+    public Monster2 getCurrentMonster() {
+        return currentMonster;
+    }
+
+    public void clearCurrentMonster() {
+        this.currentMonster = null;
+    }
+
+    public String fightMonsterWithWeapon(String weaponName) {
+        if (currentMonster == null) {
+            return "当前没有需要战斗的怪物。";
+        }
+
+        int weaponBonus = 0;
+        if (!"徒手".equals(weaponName)) {
+            Item2[] backpack = player.getBackpackArr();
+            entity.Tool2 chosenTool = null;
+            for (Item2 item : backpack) {
+                if (item instanceof entity.Tool2 && item.getItemName().equals(weaponName)) {
+                    chosenTool = (entity.Tool2) item;
+                    break;
+                }
+            }
+            if (chosenTool == null || chosenTool.getOwnCount() <= 0) {
+                return "你没有该武器或数量不足，请选择其他武器。";
+            }
+            weaponBonus = chosenTool.getAttackBonus();
+        }
+
+        int playerAttack = player.getBaseAttack() + weaponBonus;
+        int monsterAttack = currentMonster.getAttack();
+        String result;
+        int totalPower = playerAttack + monsterAttack;
+        boolean playerWins = random.nextInt(totalPower) < playerAttack;
+        if (playerWins) {
+            addItemToBackpack(currentMonster.getDropItem().getItemName(), currentMonster.getDropItem().getOwnCount());
+            bagUpDate();
+            result = "你使用" + weaponName + "攻击" + currentMonster.getName() + "，击败了怪物！获得：" + currentMonster.getDropItem().getItemName() + "。";
+        } else {
+            int lostHp = Math.max(1, monsterAttack - playerAttack);
+            player.setHp(Math.max(0, player.getHp() - lostHp));
+            if (player.getHp() <= 0) {
+                player.setGameOver(true);
+                result = "你使用" + weaponName + "攻击" + currentMonster.getName() + "失败，被怪物反击失去" + lostHp + "点生命，生命值归零，游戏结束！";
+            } else {
+                result = "你使用" + weaponName + "攻击" + currentMonster.getName() + "失败，被怪物反击失去" + lostHp + "点生命，当前生命值：" + player.getHp() + "。";
+            }
+        }
+        clearCurrentMonster();
+        return result;
+    }
+
 
     /**
      * 1. 沙滩Beach 专属随机事件
@@ -38,51 +93,35 @@ public class GameLogic {
         player.setHunger(player.getHunger()+2);
         player.setThirst(player.getThirst()+2);
 
-        int eventType = random.nextInt(4);
+        int eventType = random.nextInt(10);
         Item2[] backpack = player.getBackpackArr();
-        switch (eventType){
-            case 0:
-                // 获得灯塔碎片
-                for(Item2 item : backpack){
-                    if("灯塔碎片".equals(item.getItemName())){
-                        item.setOwnCount(item.getOwnCount() + 1);
-                        player.setFragment(player.getFragment() + 1);
-                        break;
-                    }
+        if (eventType == 0) {
+            // 获得灯塔碎片
+            for(Item2 item : backpack){
+                if("灯塔碎片".equals(item.getItemName())){
+                    item.setOwnCount(item.getOwnCount() + 1);
+                    player.setFragment(player.getFragment() + 1);
+                    break;
                 }
-                bagUpDate();
-                return "恭喜！你找到了1块灯塔碎片!";
-            case 1:
-                // 沙滩专属材料
-                String[] matList = {"贝壳","椰子"};
-                String targetMat = matList[random.nextInt(matList.length)];
-                int addNum = random.nextInt(3) + 1;
-                for(Item2 item : backpack){
-                    if(targetMat.equals(item.getItemName())){
-                        item.setOwnCount(item.getOwnCount() + addNum);
-                        break;
-                    }
-                }
-                bagUpDate();
-                return "恭喜！" + targetMat + "+" + addNum;
-            case 2:
-                // 沙滩没有怪物，本分支无操作
-                return "无事发生！";
-            case 3:
-                // 无事件
-                return "无事发生!";
-        }
-        // 新增：触发游戏结束判定
-        String result = "";
-        if(gameEnd()){
-            // 若游戏结束，追加结果提示
-            if(player.isGameWin()){
-                result += "\n★游戏胜利！你收集了足够的灯塔碎片，成功通关！★";
-            }else if(player.isGameOver()){
-                result += "\n★游戏失败！你的生存状态已达极限！★";
             }
+            bagUpDate();
+            return finishEventResult("恭喜！你找到了1块灯塔碎片!");
+        } else if (eventType < 5) {
+            // 沙滩专属材料
+            String[] matList = {"贝壳","椰子"};
+            String targetMat = matList[random.nextInt(matList.length)];
+            int addNum = random.nextInt(3) + 1;
+            for(Item2 item : backpack){
+                if(targetMat.equals(item.getItemName())){
+                    item.setOwnCount(item.getOwnCount() + addNum);
+                    break;
+                }
+            }
+            bagUpDate();
+            return finishEventResult("恭喜！" + targetMat + "+" + addNum);
+        } else {
+            return finishEventResult("无事发生!");
         }
-        return result;
     }
 
     /**
@@ -97,46 +136,42 @@ public class GameLogic {
         player.setHunger(player.getHunger()+2);
         player.setThirst(player.getThirst()+2);
 
-        int eventType = random.nextInt(4);
+        int eventType = random.nextInt(10);
         Item2[] backpack = player.getBackpackArr();
-        switch (eventType){
-            case 0:
-                for(Item2 item : backpack){
-                    if("灯塔碎片".equals(item.getItemName())){
-                        item.setOwnCount(item.getOwnCount() + 1);
-                        player.setFragment(player.getFragment() + 1);
-                        break;
-                    }
+        if (eventType == 0) {
+            for(Item2 item : backpack){
+                if("灯塔碎片".equals(item.getItemName())){
+                    item.setOwnCount(item.getOwnCount() + 1);
+                    player.setFragment(player.getFragment() + 1);
+                    break;
                 }
-                bagUpDate();
-                return "恭喜！你找到了1块灯塔碎片!";
-            case 1:
-                String[] matList = {"木头","藤蔓"};
-                String targetMat = matList[random.nextInt(matList.length)];
-                int addNum = random.nextInt(3) + 1;
-                for(Item2 item : backpack){
-                    if(targetMat.equals(item.getItemName())){
-                        item.setOwnCount(item.getOwnCount() + addNum);
-                        break;
-                    }
+            }
+            bagUpDate();
+            return finishEventResult("恭喜！你找到了1块灯塔碎片!");
+        } else if (eventType < 4) {
+            String[] matList = {"木头","藤蔓"};
+            String targetMat = matList[random.nextInt(matList.length)];
+            int addNum = random.nextInt(3) + 1;
+            for(Item2 item : backpack){
+                if(targetMat.equals(item.getItemName())){
+                    item.setOwnCount(item.getOwnCount() + addNum);
+                    break;
                 }
-                bagUpDate();
-                return "恭喜！" + targetMat + "+" + addNum;
-            case 2:
-                Monster2 monster;
-                if(random.nextBoolean()){
-                    monster = new Hare2();
-                }else{
-                    monster = new Boar2();
-                }
-                int hurt = monster.getAttack();
-                int nowHp = player.getHp();
-                player.setHp(Math.max(0, nowHp - hurt));
-                return "遇到怪物攻击！hp -" + hurt;
-            case 3:
-                return "无事发生!";
+            }
+            bagUpDate();
+            return finishEventResult("恭喜！" + targetMat + "+" + addNum);
+        } else if (eventType < 7) {
+            Monster2 monster;
+            if(random.nextBoolean()){
+                monster = new Hare2();
+            }else{
+                monster = new Boar2();
+            }
+            currentMonster = monster;
+            return finishEventResult("遭遇" + monster.getName() + "，请选择武器进行战斗。");
+        } else {
+            return finishEventResult("无事发生!");
         }
-        return "无事发生!";
     }
 
     /**
@@ -151,41 +186,36 @@ public class GameLogic {
         player.setHunger(player.getHunger()+2);
         player.setThirst(player.getThirst()+2);
 
-        int eventType = random.nextInt(4);
+        int eventType = random.nextInt(10);
         Item2[] backpack = player.getBackpackArr();
-        switch (eventType){
-            case 0:
-                for(Item2 item : backpack){
-                    if("灯塔碎片".equals(item.getItemName())){
-                        item.setOwnCount(item.getOwnCount() + 1);
-                        player.setFragment(player.getFragment() + 1);
-                        break;
-                    }
+        if (eventType == 0) {
+            for(Item2 item : backpack){
+                if("灯塔碎片".equals(item.getItemName())){
+                    item.setOwnCount(item.getOwnCount() + 1);
+                    player.setFragment(player.getFragment() + 1);
+                    break;
                 }
-                bagUpDate();
-                return "恭喜！你找到了1块灯塔碎片!";
-            case 1:
-                String[] matList = {"石头","矿石"};
-                String targetMat = matList[random.nextInt(matList.length)];
-                int addNum = random.nextInt(3) + 1;
-                for(Item2 item : backpack){
-                    if(targetMat.equals(item.getItemName())){
-                        item.setOwnCount(item.getOwnCount() + addNum);
-                        break;
-                    }
+            }
+            bagUpDate();
+            return finishEventResult("恭喜！你找到了1块灯塔碎片!");
+        } else if (eventType < 5) {
+            String[] matList = {"石头","矿石"};
+            String targetMat = matList[random.nextInt(matList.length)];
+            int addNum = random.nextInt(3) + 1;
+            for(Item2 item : backpack){
+                if(targetMat.equals(item.getItemName())){
+                    item.setOwnCount(item.getOwnCount() + addNum);
+                    break;
                 }
-                bagUpDate();
-                return "恭喜！" + targetMat + "+" + addNum;
-            case 2:
-                Monster2 monster = new Boar2();
-                int hurt = monster.getAttack();
-                int nowHp = player.getHp();
-                player.setHp(Math.max(0, nowHp - hurt));
-                return "遇到怪物攻击！hp -" + hurt;
-            case 3:
-                return "无事发生!";
+            }
+            bagUpDate();
+            return finishEventResult("恭喜！" + targetMat + "+" + addNum);
+        } else if (eventType < 7) {
+            currentMonster = new Boar2();
+            return finishEventResult("遭遇" + currentMonster.getName() + "，请选择武器进行战斗。");
+        } else {
+            return finishEventResult("无事发生!");
         }
-        return "无事发生!";
     }
 
     /**
@@ -200,41 +230,41 @@ public class GameLogic {
         player.setHunger(player.getHunger()+2);
         player.setThirst(player.getThirst()+2);
 
-        int eventType = random.nextInt(4);
+        int eventType = random.nextInt(10);
         Item2[] backpack = player.getBackpackArr();
-        switch (eventType){
-            case 0:
-                for(Item2 item : backpack){
-                    if("灯塔碎片".equals(item.getItemName())){
-                        item.setOwnCount(item.getOwnCount() + 1);
-                        player.setFragment(player.getFragment() + 1);
-                        break;
-                    }
+        if (eventType == 0) {
+            for(Item2 item : backpack){
+                if("灯塔碎片".equals(item.getItemName())){
+                    item.setOwnCount(item.getOwnCount() + 1);
+                    player.setFragment(player.getFragment() + 1);
+                    break;
                 }
-                bagUpDate();
-                return "恭喜！你找到了1块灯塔碎片!";
-            case 1:
-                String[] matList = {"贝壳","鱼"};
-                String targetMat = matList[random.nextInt(matList.length)];
-                int addNum = random.nextInt(3) + 1;
-                for(Item2 item : backpack){
-                    if(targetMat.equals(item.getItemName())){
-                        item.setOwnCount(item.getOwnCount() + addNum);
-                        break;
-                    }
+            }
+            bagUpDate();
+            return finishEventResult("恭喜！你找到了1块灯塔碎片!");
+        } else if (eventType < 5) {
+            String[] matList = {"贝壳","鱼"};
+            String targetMat = matList[random.nextInt(matList.length)];
+            int addNum = random.nextInt(3) + 1;
+            for(Item2 item : backpack){
+                if(targetMat.equals(item.getItemName())){
+                    item.setOwnCount(item.getOwnCount() + addNum);
+                    break;
                 }
-                bagUpDate();
-                return "恭喜！" + targetMat + "+" + addNum;
-            case 2:
-                Monster2 monster = new Fish2();
-                int hurt = monster.getAttack();
-                int nowHp = player.getHp();
-                player.setHp(Math.max(0, nowHp - hurt));
-                return "遇到怪物攻击！hp -" + hurt;
-            case 3:
-                return "无事发生!";
+            }
+            bagUpDate();
+            return finishEventResult("恭喜！" + targetMat + "+" + addNum);
+        } else if (eventType < 7) {
+            currentMonster = new Fish2();
+            return finishEventResult("遭遇" + currentMonster.getName() + "，请选择武器进行战斗。");
+        } else {
+            return finishEventResult("无事发生!");
         }
-        return "无事发生!";
+    }
+
+    private String finishEventResult(String result) {
+        gameEnd();
+        return result;
     }
 
     /**
@@ -252,6 +282,47 @@ public class GameLogic {
                 item.setOwnCount(0);
             }
         }
+        gameEnd();
+    }
+    // ai: 返回背包中已有武器的最大攻击加成（若无武器返回0）
+    private int getBestWeaponBonus() {
+        int best = 0;
+        Item2[] backpack = player.getBackpackArr();
+        for (Item2 it : backpack) {
+            if (it instanceof entity.Tool2) {
+                entity.Tool2 t = (entity.Tool2) it;
+                if (t.getOwnCount() > 0 && t.getAttackBonus() > best) {
+                    best = t.getAttackBonus();
+                }
+            }
+        }
+        return best;
+    }
+
+    // ai: 根据物品名称增加背包对应物品数量（掉落/拾取使用）
+    private void addItemToBackpack(String itemName, int count) {
+        Item2[] backpack = player.getBackpackArr();
+        for (Item2 it : backpack) {
+            if (it.getItemName().equals(itemName)) {
+                it.setOwnCount(it.getOwnCount() + count);
+                // 若是碎片同时更新玩家fragment计数
+                if ("灯塔碎片".equals(itemName)) {
+                    player.setFragment(player.getFragment() + count);
+                }
+                return;
+            }
+        }
+        // ai: 尝试宽松匹配（例如怪物掉落名称为"鱼肉"但背包项为"鱼"）
+        if (itemName != null && itemName.endsWith("肉")) {
+            String base = itemName.substring(0, itemName.length()-1);
+            for (Item2 it : backpack) {
+                if (it.getItemName().equals(base)) {
+                    it.setOwnCount(it.getOwnCount() + count);
+                    return;
+                }
+            }
+        }
+        // 若找不到对应条目则不处理（保持原有背包结构不变）
     }
     /**
      * 工作台合成物品预留空方法，和截图结构保持一致
@@ -270,6 +341,7 @@ public class GameLogic {
         player.setActionPoint(10);
         // 最后校正背包数据
         bagUpDate();
+        gameEnd();
     }
 
     /**

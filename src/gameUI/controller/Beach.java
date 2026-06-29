@@ -31,8 +31,11 @@ public class Beach {
         eventController.setMainController(this.main);
 
         // 2. 执行沙滩探索逻辑（触发属性变化）
-        if(player.getActionPoint() > 0)
+        if(player.getActionPoint() > 0) {
             eventController.executeExploreLogic("beach");
+        } else {
+            eventController.showMessage("探索失败", "行动点不足，无法继续探索。");
+        }
         // 2. 创建新窗口
         Stage stage = new Stage();
         stage.setScene(new Scene(root));

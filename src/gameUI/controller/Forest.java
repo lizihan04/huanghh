@@ -30,8 +30,11 @@ public class Forest {
         eventController.setMainController(this.main);
 
         // 2. 执行森林探索逻辑（触发属性变化）
-        if(player.getActionPoint() > 0)
+        if(player.getActionPoint() > 0) {
             eventController.executeExploreLogic("forest");
+        } else {
+            eventController.showMessage("探索失败", "行动点不足，无法继续探索。");
+        }
 
         // 3. 创建新窗口
         Stage stage = new Stage();
