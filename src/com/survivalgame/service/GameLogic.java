@@ -346,7 +346,7 @@ public class GameLogic {
 
     /**
      * 判断游戏是否结束，返回布尔值
-     * 失败条件：血量≤0 / 饥饿≥100 / 口渴≥100 / 疲惫≥100 / 天数>30
+     * 失败条件：血量≤0 / 饥饿≥100 / 口渴≥100 / 疲惫≥100 / 30天内未集齐碎片
      * 胜利条件：碎片≥20块
      */
     public boolean gameEnd() {
@@ -357,7 +357,7 @@ public class GameLogic {
         int day = player.getDay();
         int frag = player.getFragment();
 
-        boolean isLose = hp <= 0 || hunger >= 100 || thirst >= 100 || fatigue >= 100 || day > 30;
+        boolean isLose = hp <= 0 || hunger >= 100 || thirst >= 100 || fatigue >= 100 || (day >= 30 && frag < MAX_FRAGMENT);
         boolean isWin = frag >= MAX_FRAGMENT;
 
         player.setGameOver(isLose);
