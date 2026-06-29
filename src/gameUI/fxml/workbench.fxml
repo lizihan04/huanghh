@@ -108,7 +108,7 @@
                   </StackPane>
                   <StackPane prefHeight="35.0" prefWidth="300.0">
                      <children>
-                        <Button mnemonicParsing="false" text="make it !" />
+                        <Button mnemonicParsing="false" onAction="#makeFragment" text="make it !" />
                      </children>
                   </StackPane>
                </children>

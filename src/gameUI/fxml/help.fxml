@@ -34,6 +34,7 @@
                   <Label wrapText="true" text="3. 石剑 = 木棍×1 + 矿石×2 + 石头×1" />
                   <Label wrapText="true" text="4. 斧头 = 木棍×1 + 矿石×2 + 石头×1" />
                   <Label wrapText="true" text="5. 锤子 = 木棍×1 + 矿石×2 + 石头×1" />
+                  <Label wrapText="true" text="6. 碎片 = 矿石×4" />
                   <Label wrapText="true" text="3.4 地图切换系统" style="-fx-font-weight: bold;" />
                   <Label wrapText="true" text="点击「地图」按钮，可自由选择前往沙滩、丛林、岩地、海岸任意地形。" />
                   <Label wrapText="true" text="3.5 区域探索系统" style="-fx-font-weight: bold;" />
