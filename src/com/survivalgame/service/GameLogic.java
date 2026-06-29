@@ -321,6 +321,7 @@ public class GameLogic {
         }
         // 恢复行动点
         player.setActionPoint(10);
+        player.setDay(player.getDay() + 1);
         // 最后校正背包数据
         bagUpDate();
         gameEnd();

@@ -10,6 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gameUI.controller.Main">
    <children>
@@ -199,6 +200,24 @@
                </content>
             </ScrollPane>
          </center>
+         <top>
+            <StackPane prefWidth="100.0" BorderPane.alignment="CENTER" />
+         </top>
       </BorderPane>
+      <HBox prefHeight="25.0" prefWidth="523.0">
+         <children>
+            <Label prefHeight="25.0" prefWidth="125.0" />
+            <Label fx:id="labelDay" prefHeight="25.0" prefWidth="125.0" text="Label" textFill="RED">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Label>
+            <Label fx:id="labelCs" prefHeight="25.0" prefWidth="125.0" text="Label" textFill="RED">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
    </children>
 </AnchorPane>

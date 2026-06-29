@@ -30,6 +30,10 @@ public class Main {
     private Label fatigueLabel;
     @FXML
     private Label actionPointLabel;
+    @FXML
+    private Label labelDay;
+    @FXML
+    private Label labelCs;
 
     private Player2 player = Player2.getInstance();
 
@@ -46,6 +50,8 @@ public class Main {
         thirstLabel.setText("饥渴值：" + player.getThirst());
         fatigueLabel.setText("疲惫值：" + player.getFatigue());
         actionPointLabel.setText("行动点：" + player.getActionPoint());
+        labelDay.setText("第" + player.getDay() + "天");
+        labelCs.setText("碎片数量：" + player.getFragment());
     }
 
     //页面操作
