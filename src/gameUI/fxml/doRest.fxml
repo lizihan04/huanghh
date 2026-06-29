@@ -19,9 +19,9 @@
       </StackPane>
       <StackPane prefHeight="253.0" prefWidth="400.0">
          <children>
-            <Label text="点击！-15疲惫！">
+            <Label text="点击！-15疲惫！生命+5！">
                <font>
-                  <Font size="36.0" />
+                  <Font size="24.0" />
                </font>
             </Label>
          </children>

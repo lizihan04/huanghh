@@ -172,6 +172,7 @@ public class Player2 {
         }
         actionPoint--;
         fatigue = Math.max(0, fatigue - 15);
+        hp = Math.min(hp + 5, 100);
     }
 
 
