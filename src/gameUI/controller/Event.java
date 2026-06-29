@@ -4,11 +4,14 @@ import com.survivalgame.service.GameLogic;
 import entity.Item2;
 import entity.Player2;
 import entity.Tool2;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
 
 public class Event {
     @FXML
@@ -71,6 +74,9 @@ public class Event {
         if (main != null) {
             main.refreshUI();
         }
+        if (gameLogic.gameEnd() && !Player2.getInstance().isGameWin()) {
+            showFailureAlert();
+        }
     }
 
     public void showMessage(String title, String message) {
@@ -122,5 +128,19 @@ public class Event {
         if (main != null) {
             main.refreshUI();
         }
+        if (gameLogic.gameEnd() && !Player2.getInstance().isGameWin()) {
+            showFailureAlert();
+        }
+    }
+
+    private void showFailureAlert() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("荒野求生失败");
+        alert.setHeaderText(null);
+        alert.setContentText("荒野求生失败");
+        alert.initModality(Modality.APPLICATION_MODAL);
+        alert.showAndWait();
+        Platform.exit();
+        System.exit(0);
     }
 }
