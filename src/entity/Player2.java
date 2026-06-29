@@ -94,22 +94,22 @@ public class Player2 {
     }
 
     // ========== 4个独立进食方法，分别对应四种食物 ==========
-    // 1. 吃椰子 Coco，减少口渴值
+    // 1. 吃椰子 Coco
     public void eatCoco() {
         eatSingleFood("椰子");
     }
 
-    // 2. 吃兔肉，减少饥饿值
+    // 2. 吃兔肉
     public void eatRabbitMeat() {
         eatSingleFood("兔肉");
     }
 
-    // 3. 吃鱼，减少疲惫值
+    // 3. 吃鱼
     public void eatFish() {
         eatSingleFood("鱼");
     }
 
-    // 4. 吃猪肉，增加血量
+    // 4. 吃猪肉
     public void eatPork() {
         eatSingleFood("猪肉");
     }
@@ -156,25 +156,9 @@ public class Player2 {
                 hp = Math.min(100, hp + 10);
                 break;
             default:
-                String recoverType = foodObj.getRecoverType();
-                int val = foodObj.getRecoverValue();
-                switch (recoverType) {
-                    case "hp":
-                        hp = Math.min(100, hp + val);
-                        break;
-                    case "hunger":
-                        hunger = Math.max(0, hunger - val);
-                        break;
-                    case "thirst":
-                        thirst = Math.max(0, thirst - val);
-                        break;
-                    case "fatigue":
-                        fatigue = Math.max(0, fatigue - val);
-                        break;
-                    default:
-                        return;
-                }
-                break;
+                // 不存在的食物名称，直接不生效
+                return;
+
         }
         // 消耗一个食物
         foodObj.setOwnCount(foodObj.getOwnCount() - 1);
@@ -190,19 +174,8 @@ public class Player2 {
         fatigue = Math.max(0, fatigue - 15);
     }
 
-    // 下一天：时间流逝，饥饿、口渴负面值上涨（变大）
-    public void next_day() {
-        if (GameLogic.getInstance().gameEnd()) {
-            return;
-        }
-        day++;
-        actionPoint = 10;
-        // 每天饥饿、口渴数值增加（更饿更渴）
-        setHunger(hunger + 10);
-        setThirst(thirst + 5);
-    }
 
-    // 私有工具：根据物品名称查下标
+    // 根据物品名称查下标
     private int getItemIndexByName(String itemName) {
         for (int i = 0; i < backpackArr.length; i++) {
             if (backpackArr[i].getItemName().equals(itemName)) {
